@@ -16,7 +16,6 @@
 		<folder>assets</folder>
 		<folder>classes</folder>
 		<folder>install</folder>
-		<folder>install/fields</folder>
 		<folder>tmpl</folder>
 		
 		<filename plugin="jb_one_to_many">jb_one_to_many.php</filename>

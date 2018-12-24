@@ -128,19 +128,18 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 		// Event
 		$event  =   ( isset( $options2['event'] ) && $field->state != 'disabled' ) ? $options2['event'] : 'afterstore';
 
-		// Content Type
-		$content_type  =   ( isset( $options2['content_type'] ) && $field->state != 'disabled' ) ? $options2['content_type'] : '#__cck_store_free_map';
-		
-		// Table
-		// $table  =   ( isset( $options2['table'] ) && $field->state != 'disabled' ) ? $options2['table'] : '#__cck_store_free_map';
+		// Table and Fields
+		$table  =   ( isset( $options2['table'] ) && $field->state != 'disabled' ) ? $options2['table'] : '#__cck_store_free_map';
 		$field_one_id  =   ( isset( $options2['field_one_id'] ) && $field->state != 'disabled' ) ? $options2['field_one_id'] : 'one_id';
 		$field_one_name  =   ( isset( $options2['field_one_name'] ) && $field->state != 'disabled' ) ? $options2['field_one_name'] : 'one_name';
 		$field_many_id  =   ( isset( $options2['field_many_id'] ) && $field->state != 'disabled' ) ? $options2['field_many_id'] : 'many_id';
 		$field_many_name  =   ( isset( $options2['field_many_name'] ) && $field->state != 'disabled' ) ? $options2['field_many_name'] : 'many_name';
+		// Seperator
+		$seperator_many_id  =   ( isset( $options2['seperator_many_id'] ) && $field->state != 'disabled' ) ? $options2['seperator_many_id'] : ',';
+		$seperator_many_name  =   ( isset( $options2['seperator_many_name'] ) && $field->state != 'disabled' ) ? $options2['seperator_many_name'] : ',';
 		
-		// Array
+		// Array One
 		$array_one  =   ( isset( $options2['array_one'] ) && $field->state != 'disabled' ) ? $options2['array_one'] : 'fields';
-		$array_many  =   ( isset( $options2['array_many'] ) && $field->state != 'disabled' ) ? $options2['array_many'] : 'fields';
 		
 		switch ($array_one) 
 		{
@@ -156,11 +155,20 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 			$one_name = $config['storages'][$config_table_one_name]->$config_field_one_name;	
 			break;
 			
+			// $cck
+			case 'cck':
+			$one_id = $cck->get{$cck_attribute_one_id}($cck_name_one_id);				
+			$one_name = $cck->get{$cck_attribute_one_name}($cck_name_one_name);
+			break;
+			
 			default:
 			$one_id = $fields[$fields_name_one_id]->$fields_attribute_one_id;				
 			$one_name = $fields[$fields_name_one_name]->$fields_attribute_one_name;	
 			break;
 		}
+		
+		// Array Many
+		$array_many  =   ( isset( $options2['array_many'] ) && $field->state != 'disabled' ) ? $options2['array_many'] : 'fields';
 		
 		switch ($array_many) 
 		{
@@ -176,15 +184,18 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 			$many_name = $config['storages'][$config_table_many_name]->$config_field_many_name;		
 			break;
 			
+			// $cck
+			case 'cck':
+			$many_id = $cck->get{$cck_attribute_many_id}($cck_name_many_id);				
+			$many_name = $cck->get{$cck_attribute_many_name}($cck_name_many_name);
+			break;
+
 			default:	
 			$many_id = $fields[$fields_name_many_id]->$fields_attribute_many_id;				
 			$many_name = $fields[$fields_name_many_name]->$fields_attribute_many_name;		
 			break;
 		}
 		
-		// Seperator
-		$seperator_many_id  =   ( isset( $options2['seperator_many_id'] ) && $field->state != 'disabled' ) ? $options2['seperator_many_id'] : ',';
-		$seperator_many_name  =   ( isset( $options2['seperator_many_name'] ) && $field->state != 'disabled' ) ? $options2['seperator_many_name'] : ',';
 		
 		// Validate
 		parent::g_onCCK_FieldPrepareStore_Validation( $field, $name, $value, $config );
@@ -272,59 +283,61 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 
 
 		// GET ARRAYS SORTED FIRST
+		
 		// get array of new 'many_ids'
-		// get array of old 'many_ids'
-
-		$many_ids['new'] = explode($process['seperator_many_id'], $process['many_id']); 
-
-
+		$new['many_ids'] = explode($process['seperator_many_id'], $process['many_id']); 
+		$new['many_names'] = explode($process['seperator_many_name'], $process['many_name']); 
+		
+		// get all pk's related to one_id and one_name as 'old'
 		$content = new JCckContentFree; 
 		$data      = array( 
-						$process['field_one_id']=>$process['one_id'], 
-						$process['field_one_name']=>$process['one_name']
-					); 
+			$process['field_one_id']=>$process['one_id'], 
+			$process['field_one_name']=>$process['one_name']
+		); 
 		
-		$map_pks['old'] = $content->search( $process['content_type'], $data )->findPks();
-
-		foreach ( $map_pks['old'] as $key => $pk ) 
+		$old['pks'] = $content->search( $process['content_type'], $data )->findPks();
+		
+		// get many_id from each $pks
+		foreach ( $old['pks'] as $key => $pk ) 
 		{
 			
 			if ( $content->load( $pk )->isSuccessful() ) 
 			{ 
 
-				$many_ids['old'][$key] = $content->get($process['field_many_id']);
+				$old['many_ids'][$key] = $content->get($process['field_many_id']);
 	
 			}	
 			
 		} 
 
+
 		// NOW ADD OR DELETE MAP DATA
 		
 		// DELETE
-		foreach ( $many_ids['old'] as $key => $id ) 
+		foreach ( $old['many_ids'] as $key => $id ) 
 		{ 
 
-			if ( !in_array($id, $many_ids['new']) )
+			if ( !in_array($id, $new['many_ids']) )
 			{
 
-				$content->delete( $map_pks['old'][$key] );
+				$content->delete( $old['pks'][$key] );
 
 			}
 			
 		} 
 
 		// ADD
-		foreach ( $many_ids['new'] as $key => $id) 
+		foreach ( $new['many_ids'] as $key => $id) 
 		{ 
 
-			if (!in_array($id, $many_ids['old']))
+			if (!in_array($id, $old['many_ids']))
 			{
 
 				$data      = array( 
 					$process['field_one_id']=>$process['one_id'],
 					$process['field_one_name']=>$process['one_name'],
 					$process['field_many_id']=>$id,
-					$process['field_many_name']=>$process['many_name']
+					$process['field_many_name']=>$new['many_names'][$key]
 				); 
 
 				if ( $content->create( $content_type, $data )->isSuccessful() ) 

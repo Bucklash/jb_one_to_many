@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="plugin" group="cck_field" version="2.5" method="upgrade">
-	<name>plg_cck_field_jb_one_to_many</name>
+	<name>PLG_CCK_FIELD_JB_ONE_TO_MANY</name>
 	<author>Octopoos</author>
 	<authorEmail>contact@seblod.com</authorEmail>
 	<authorUrl>https://www.seblod.com</authorUrl>
 	<copyright>Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.</copyright>
 	<license>GNU General Public License version 2 or later.</license>
 	<creationDate>December 2018</creationDate>
-	<description>Map One to Many i.e. map one teacher to many students</description>
+	<description>PLG_CCK_FIELD_JB_ONE_TO_MANY_DESC</description>
 	<version>1.0.0</version>
 	
 	<scriptfile>install/script.php</scriptfile>

@@ -37,54 +37,14 @@ defined( '_JEXEC' ) or die;
         
         echo '<ul id="array-one-fields" style="clear: both">';
         echo JCckDev::renderLegend(JText::_( 'COM_CCK_FIELDS' ) );
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['fields_name_one_id'], $config, array( 'label'=>'FIELDS_NAME_ONE_ID', 'storage_field'=>'json[options2][fields_name_one_id]' ), array(), 'fields one' );
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['fields_attribute_one_id'], $config, array( 'label'=>'FIELDS_ATTRIBUTE_ONE_ID', 'storage_field'=>'json[options2][fields_attribute_one_id]' ), array(), 'fields one' );
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['fields_name_one_name'], $config, array( 'label'=>'FIELDS_NAME_ONE_NAME', 'storage_field'=>'json[options2][fields_name_one_name]' ), array(), 'fields one' );
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['fields_attribute_one_name'], $config, array( 'label'=>'FIELDS_ATTRIBUTE_ONE_NAME', 'storage_field'=>'json[options2][fields_attribute_one_name]' ), array(), 'fields one' );
-        echo '</ul>';
-        
-        echo '<ul id="array-one-config" style="clear: both">';
         echo JCckDev::renderLegend(JText::_( 'COM_CCK_CONFIG' ) );
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['config_table_one_id'], $config, array( 'label'=>'CONFIG_TABLE_ONE_ID', 'storage_field'=>'json[options2][config_table_one_id]' ), array(), 'config one' );
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['config_field_one_id'], $config, array( 'label'=>'CONFIG_FIELD_ONE_ID', 'storage_field'=>'json[options2][config_field_one_id]' ), array(), 'config one' );
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['config_table_one_name'], $config, array( 'label'=>'CONFIG_TABLE_ONE_NAME', 'storage_field'=>'json[options2][config_table_one_name]' ), array(), 'config one' );
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['config_field_one_name'], $config, array( 'label'=>'CONFIG_FIELD_ONE_NAME', 'storage_field'=>'json[options2][config_field_one_name]' ), array(), 'config one' );
-        echo '</ul>';
-        
-        echo '<ul id="array-one-cck" style="clear: both">';
         echo JCckDev::renderLegend(JText::_( 'COM_CCK_CCK' ) );
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['cck_name_one_id'], $config, array( 'label'=>'CCK_NAME_ONE_ID', 'storage_field'=>'json[options2][cck_name_one_id]' ), array(), 'cck one' );
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['cck_attribute_one_id'], $config, array( 'label'=>'CCK_ATTRIBUTE_ONE_ID', 'storage_field'=>'json[options2][cck_attribute_one_id]' ), array(), 'cck one' );
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['cck_name_one_name'], $config, array( 'label'=>'CCK_NAME_ONE_NAME', 'storage_field'=>'json[options2][cck_name_one_name]' ), array(), 'cck one' );
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['cck_attribute_one_name'], $config, array( 'label'=>'CCK_ATTRIBUTE_ONE_NAME', 'storage_field'=>'json[options2][cck_attribute_one_name]' ), array(), 'cck one' );
         echo '</ul>';
         
-        echo JCckDev::renderSpacer( JText::_( 'COM_CCK_MANY' ) );
-        echo JCckDev::renderForm( 'core_dev_select', @$options2['array_many'], $config, array( 'label'=>'ARRAY_MANY', 'selectlabel'=>'', 'defaultvalue'=>'fields', 'options'=>'FIELDS=fields||CONFIG=config||CCK=cck', 'storage_field'=>'json[options2][array_many]'), array(), 'array many' );
-        
-        echo '<ul id="array-many-fields" style="clear: both">';
-        echo JCckDev::renderLegend(JText::_( 'COM_CCK_FIELDS' ) );
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['fields_name_many_id'], $config, array( 'label'=>'FIELDS_NAME_MANY_ID', 'storage_field'=>'json[options2][fields_name_many_id]' ), array(), 'fields many' );
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['fields_attribute_many_id'], $config, array( 'label'=>'FIELDS_ATTRIBUTE_MANY_ID', 'storage_field'=>'json[options2][fields_attribute_many_id]' ), array(), 'fields many' );
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['fields_name_many_name'], $config, array( 'label'=>'FIELDS_NAME_MANY_NAME', 'storage_field'=>'json[options2][fields_name_many_name]' ), array(), 'fields many' );
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['fields_attribute_many_name'], $config, array( 'label'=>'FIELDS_ATTRIBUTE_MANY_NAME', 'storage_field'=>'json[options2][fields_attribute_many_name]' ), array(), 'fields many' );
-        echo '</ul>';
-        
-        echo '<ul id="array-many-config" style="clear: both">';
-        echo JCckDev::renderLegend(JText::_( 'COM_CCK_CONFIG' ) );
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['config_table_many_id'], $config, array( 'label'=>'CONFIG_TABLE_MANY_ID', 'storage_field'=>'json[options2][config_table_many_id]' ), array(), 'config many' );
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['config_field_many_id'], $config, array( 'label'=>'CONFIG_FIELD_MANY_ID', 'storage_field'=>'json[options2][config_field_many_id]' ), array(), 'config many' );
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['config_table_many_name'], $config, array( 'label'=>'CONFIG_TABLE_MANY_NAME', 'storage_field'=>'json[options2][config_table_many_name]' ), array(), 'config many' );
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['config_field_many_name'], $config, array( 'label'=>'CONFIG_FIELD_MANY_NAME', 'storage_field'=>'json[options2][config_field_many_name]' ), array(), 'config many' );
-        echo '</ul>';
-        
-        echo '<ul id="array-many-cck" style="clear: both">';
-        echo JCckDev::renderLegend(JText::_( 'COM_CCK_CCK' ) );
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['cck_name_many_id'], $config, array( 'label'=>'CCK_NAME_MANY_ID', 'storage_field'=>'json[options2][cck_name_many_id]' ), array(), 'cck many' );
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['cck_attribute_many_id'], $config, array( 'label'=>'CCK_ATTRIBUTE_MANY_ID', 'storage_field'=>'json[options2][cck_attribute_many_id]' ), array(), 'cck many' );
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['cck_name_many_name'], $config, array( 'label'=>'CCK_NAME_MANY_NAME', 'storage_field'=>'json[options2][cck_name_many_name]' ), array(), 'cck many' );
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['cck_attribute_many_name'], $config, array( 'label'=>'CCK_ATTRIBUTE_MANY_NAME', 'storage_field'=>'json[options2][cck_attribute_many_name]' ), array(), 'cck many' );
-        echo '</ul>';
+        echo JCckDev::renderForm( 'core_dev_text', @$options2['one_id_1'], $config, array( 'label'=>'ONE_ID_1', 'storage_field'=>'json[options2][one_id_1]' ), array(), 'fields one' );
+        echo JCckDev::renderForm( 'core_dev_text', @$options2['one_id_2'], $config, array( 'label'=>'ONE_ID_2', 'storage_field'=>'json[options2][one_id_2]' ), array(), 'fields two' );
+        echo JCckDev::renderForm( 'core_dev_text', @$options2['one_name_1'], $config, array( 'label'=>'ONE_NAME_1', 'storage_field'=>'json[options2][one_name_1]' ), array(), 'fields one' );
+        echo JCckDev::renderForm( 'core_dev_text', @$options2['one_name_2'], $config, array( 'label'=>'ONE_NAME_2', 'storage_field'=>'json[options2][one_name_2]' ), array(), 'fields two' );
         
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );
 		echo JCckDev::getForm( 'core_storage', $this->item->storage, $config );

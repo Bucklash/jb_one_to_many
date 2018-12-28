@@ -36,9 +36,6 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 			return;
 		}
 		parent::g_onCCK_FieldPrepareContent( $field, $config );
-		
-		// Prepare (copied from video_vimeo.php)
-		$options2	=	JCckDev::fromJSON( $field->options2 );
 
 		// Set
 		$field->value	=	$value;

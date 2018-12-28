@@ -9,6 +9,7 @@
 **/
 
 defined( '_JEXEC' ) or die;
+$options2	=	JCckDev::fromJSON( $this->item->options2 );
 ?>
 
 <div class="seblod">
@@ -30,8 +31,8 @@ defined( '_JEXEC' ) or die;
         echo JCckDev::renderForm( 'core_dev_text', @$options2['field_one_name'], $config, array( 'label'=>'FIELD_ONE_NAME', 'storage_field'=>'json[options2][field_one_name]', 'required'=>'required' ) );
         echo JCckDev::renderForm( 'core_dev_text', @$options2['field_many_id'], $config, array( 'label'=>'FIELD_MANY_ID', 'storage_field'=>'json[options2][field_many_id]', 'required'=>'required' ) );
         echo JCckDev::renderForm( 'core_dev_text', @$options2['field_many_name'], $config, array( 'label'=>'FIELD_MANY_NAME', 'storage_field'=>'json[options2][field_many_name]', 'required'=>'required' ) );
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['seperator_many_id'], $config, array( 'label'=>'SEPERATOR_FOR_MANY_ID', 'defaultvalue'=>',', 'storage_field'=>'json[options2][seperator_many_id]' ) );
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['seperator_many_name'], $config, array( 'label'=>'SEPERATOR_FOR_MANY_NAME', 'defaultvalue'=>',', 'storage_field'=>'json[options2][seperator_many_name]' ) );
+        echo JCckDev::renderForm( 'core_dev_text', @$options2['separator_many_id'], $config, array( 'label'=>'SEPARATOR_FOR_MANY_ID', 'defaultvalue'=>',', 'storage_field'=>'json[options2][separator_many_id]' ) );
+        echo JCckDev::renderForm( 'core_dev_text', @$options2['separator_many_name'], $config, array( 'label'=>'SEPARATOR_FOR_MANY_NAME', 'defaultvalue'=>',', 'storage_field'=>'json[options2][separator_many_name]' ) );
         
         // ONE OPTIONS
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_ONE' ), '', '2', array( 'class_sfx'=>'-2cols' ) );

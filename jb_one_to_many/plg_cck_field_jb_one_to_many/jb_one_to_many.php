@@ -37,6 +37,9 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 		}
 		parent::g_onCCK_FieldPrepareContent( $field, $config );
 		
+		// Prepare (copied from video_vimeo.php)
+		$options2	=	JCckDev::fromJSON( $field->options2 );
+
 		// Set
 		$field->value	=	$value;
 	}
@@ -134,9 +137,9 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 		$field_one_name  =   ( isset( $options2['field_one_name'] ) && $field->state != 'disabled' ) ? $options2['field_one_name'] : 'one_name';
 		$field_many_id  =   ( isset( $options2['field_many_id'] ) && $field->state != 'disabled' ) ? $options2['field_many_id'] : 'many_id';
 		$field_many_name  =   ( isset( $options2['field_many_name'] ) && $field->state != 'disabled' ) ? $options2['field_many_name'] : 'many_name';
-		// Seperator
-		$seperator_many_id  =   ( isset( $options2['seperator_many_id'] ) && $field->state != 'disabled' ) ? $options2['seperator_many_id'] : ',';
-		$seperator_many_name  =   ( isset( $options2['seperator_many_name'] ) && $field->state != 'disabled' ) ? $options2['seperator_many_name'] : ',';
+		// Separator
+		$separator_many_id  =   ( isset( $options2['separator_many_id'] ) && $field->state != 'disabled' ) ? $options2['separator_many_id'] : ',';
+		$separator_many_name  =   ( isset( $options2['separator_many_name'] ) && $field->state != 'disabled' ) ? $options2['separator_many_name'] : ',';
 		
 		// Array One
 		$array_one  =   ( isset( $options2['array_one'] ) && $field->state != 'disabled' ) ? $options2['array_one'] : 'fields';
@@ -200,12 +203,14 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 				'field_one_name'=>$field_one_name,
 				'field_many_id'=>$field_many_id,
 				'field_many_name'=>$field_many_name,
+				'array_one'=>$array_one,
 				'one_id'=>$one_id,
 				'one_name'=>$one_name,
+				'array_many'=>$array_many,
 				'many_id'=>$many_id,
 				'many_name'=>$many_name,
-				'seperator_many_id'=>$seperator_many_id,
-				'seperator_many_name'=>$seperator_many_name
+				'separator_many_id'=>$separator_many_id,
+				'separator_many_name'=>$separator_many_name
 				// 'valid'=>$valid
 			));
 		}
@@ -277,8 +282,8 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 		// GET ARRAYS SORTED FIRST
 		
 		// get array of new 'many_ids'
-		$new['many_ids'] = explode($process['seperator_many_id'], $process['many_id']); 
-		$new['many_names'] = explode($process['seperator_many_name'], $process['many_name']); 
+		$new['many_ids'] = explode($process['separator_many_id'], $process['many_id']); 
+		$new['many_names'] = explode($process['separator_many_name'], $process['many_name']); 
 		
 		// get all pk's related to one_id and one_name as 'old'
 		$content = new JCckContentFree; 

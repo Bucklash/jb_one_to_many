@@ -140,63 +140,55 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 		
 		// Array One
 		$array_one  =   ( isset( $options2['array_one'] ) && $field->state != 'disabled' ) ? $options2['array_one'] : 'fields';
-		
-		switch ($array_one) 
-		{
-			// $fields
-			case 'field':				
-			$one_id = $fields[$fields_name_one_id]->$fields_attribute_one_id;				
-			$one_name = $fields[$fields_name_one_name]->$fields_attribute_one_name;	
-			break;
-			
-			// $config
-			case 'config':
-			$one_id = $config['storages'][$config_table_one_id]->$config_field_one_id;		
-			$one_name = $config['storages'][$config_table_one_name]->$config_field_one_name;	
-			break;
-			
-			// $cck
-			case 'cck':
-			$one_id = $cck->get{$cck_attribute_one_id}($cck_name_one_id);				
-			$one_name = $cck->get{$cck_attribute_one_name}($cck_name_one_name);
-			break;
-			
-			default:
-			$one_id = $fields[$fields_name_one_id]->$fields_attribute_one_id;				
-			$one_name = $fields[$fields_name_one_name]->$fields_attribute_one_name;	
-			break;
-		}
+		$one_id_value_1 = ( isset( $options2['one_id_value_1'] ) && $field->state != 'disabled' ) ? $options2['one_id_value_1'] : '';
+		$one_id_value_2 = ( isset( $options2['one_id_value_2'] ) && $field->state != 'disabled' ) ? $options2['one_id_value_2'] : '';
+		$one_name_value_1 = ( isset( $options2['one_name_value_1'] ) && $field->state != 'disabled' ) ? $options2['one_name_value_1'] : '';
+		$one_name_value_2 = ( isset( $options2['one_name_value_2'] ) && $field->state != 'disabled' ) ? $options2['one_name_value_2'] : '';
 		
 		// Array Many
 		$array_many  =   ( isset( $options2['array_many'] ) && $field->state != 'disabled' ) ? $options2['array_many'] : 'fields';
+		$many_id_value_1 = ( isset( $options2['many_id_value_1'] ) && $field->state != 'disabled' ) ? $options2['many_id_value_1'] : '';
+		$many_id_value_2 = ( isset( $options2['many_id_value_2'] ) && $field->state != 'disabled' ) ? $options2['many_id_value_2'] : '';
+		$many_name_value_1 = ( isset( $options2['many_name_value_1'] ) && $field->state != 'disabled' ) ? $options2['many_name_value_1'] : '';
+		$many_name_value_2 = ( isset( $options2['many_name_value_2'] ) && $field->state != 'disabled' ) ? $options2['many_name_value_2'] : '';
 		
-		switch ($array_many) 
+		switch ($array_one)
 		{
-			// $fields
-			case 'field':					
-			$many_id = $fields[$fields_name_many_id]->$fields_attribute_many_id;				
-			$many_name = $fields[$fields_name_many_name]->$fields_attribute_many_name;		
-			break;
-			
-			// $config
-			case 'config':			
-			$many_id = $config['storages'][$config_table_many_id]->$config_field_many_id;		
-			$many_name = $config['storages'][$config_table_many_name]->$config_field_many_name;		
-			break;
-			
-			// $cck
+			case 'fields':
+				$one_id = $fields[$one_id_value_1]->$one_id_value_2;
+				$one_name = $fields[$one_name_value_1]->$one_name_value_2;
+				break;
+			case 'config':
+				$one_id = $config['storages'][$one_id_value_1][$one_id_value_2];
+				$one_name = $fields[$one_name_value_1][$one_name_value_2];
+				break;
 			case 'cck':
-			$many_id = $cck->get{$cck_attribute_many_id}($cck_name_many_id);				
-			$many_name = $cck->get{$cck_attribute_many_name}($cck_name_many_name);
-			break;
-
-			default:	
-			$many_id = $fields[$fields_name_many_id]->$fields_attribute_many_id;				
-			$many_name = $fields[$fields_name_many_name]->$fields_attribute_many_name;		
-			break;
+				$one_id = $cck->get{$one_id_value_1}($one_id_value_2);
+				$one_name = $cck->get{$one_name_value_1}($one_name_value_2);
+				break;
+			default:
+				$one_id = $fields[$one_id_value_1]->$one_id_value_2;
+				$one_name = $fields[$one_name_value_1]->$one_name_value_2;	
 		}
 		
-		
+		switch ($array_many)
+		{
+			case 'fields':
+				$many_id = $fields[$many_id_value_1]->$many_id_value_2;
+				$many_name = $fields[$many_name_value_1]->$many_name_value_2;
+				break;
+			case 'config':
+				$many_id = $config['storages'][$many_id_value_1][$many_id_value_2];
+				$many_name = $fields[$many_name_value_1][$many_name_value_2];
+				break;
+			case 'cck':
+				$many_id = $cck->get{$many_id_value_1}($many_id_value_2);
+				$many_name = $cck->get{$many_name_value_1}($many_name_value_2);
+				break;
+			default:
+				$many_id = $fields[$many_id_value_1]->$many_id_value_2;
+				$many_name = $fields[$many_name_value_1]->$many_name_value_2;	
+		}
 		// Validate
 		parent::g_onCCK_FieldPrepareStore_Validation( $field, $name, $value, $config );
 		

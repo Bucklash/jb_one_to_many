@@ -17,6 +17,7 @@ defined( '_JEXEC' ) or die;
         <?php
         echo JCckDev::renderForm( 'core_label', $this->item->label, $config );
         
+        // GLOBAL SETTINGS
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_GLOBAL_SETTINGS' ), JText::_( 'COM_CCK_GLOBAL_SETTINGS_DESC' ), '2' );
         echo JCckDev::renderForm( 'core_dev_select', @$options2['event'], $config, array( 'label'=>'STORAGE_EVENT', 'selectlabel'=>'', 'defaultvalue'=>'afterstore', 'options'=>'BeforeStore=beforestore||AfterStore=afterstore', 'storage_field'=>'json[options2][event]' ) );
         echo JCckDev::renderBlank();
@@ -32,20 +33,25 @@ defined( '_JEXEC' ) or die;
         echo JCckDev::renderForm( 'core_dev_text', @$options2['seperator_many_id'], $config, array( 'label'=>'SEPERATOR_FOR_MANY_ID', 'defaultvalue'=>',', 'storage_field'=>'json[options2][seperator_many_id]' ) );
         echo JCckDev::renderForm( 'core_dev_text', @$options2['seperator_many_name'], $config, array( 'label'=>'SEPERATOR_FOR_MANY_NAME', 'defaultvalue'=>',', 'storage_field'=>'json[options2][seperator_many_name]' ) );
         
-        echo JCckDev::renderSpacer( JText::_( 'COM_CCK_ONE' ) );
+        // ONE OPTIONS
+        echo JCckDev::renderSpacer( JText::_( 'COM_CCK_ONE' ), '', '2', array( 'class_sfx'=>'-2cols' ) );
         echo JCckDev::renderForm( 'core_dev_select', @$options2['array_one'], $config, array( 'label'=>'ARRAY_ONE', 'selectlabel'=>'', 'defaultvalue'=>'fields', 'options'=>'FIELDS=fields||CONFIG=config||CCK=cck', 'storage_field'=>'json[options2][array_one]'), array(), 'array one' );
+        echo JCckDev::renderBlank( '<div class="fields-one">$fields[#value1#]->#value2#;</div><div class="config-one">$config[\'storages\'][#value1#][#value2#];</div><div class="cck-one">$cck->get#value1#(#value2#);</div>', 'Array:');
+        echo JCckDev::renderForm( 'core_dev_text', @$options2['one_id_value_1'], $config, array( 'label'=>'ONE_ID_VALUE_1', 'storage_field'=>'json[options2][one_id_value_1]' ), array(), 'one_id_value_1' );
+        echo JCckDev::renderForm( 'core_dev_text', @$options2['one_id_value_2'], $config, array( 'label'=>'ONE_ID_VALUE_2', 'storage_field'=>'json[options2][one_id_value_2]' ), array(), 'one_id_value_2' );
+        echo JCckDev::renderForm( 'core_dev_text', @$options2['one_name_value_1'], $config, array( 'label'=>'ONE_NAME_VALUE_1', 'storage_field'=>'json[options2][one_name_value_1]' ), array(), 'one_name_value_1' );
+        echo JCckDev::renderForm( 'core_dev_text', @$options2['one_name_value_2'], $config, array( 'label'=>'ONE_NAME_VALUE_2', 'storage_field'=>'json[options2][one_name_value_2]' ), array(), 'one_name_value_2' );
         
-        echo '<ul id="array-one-fields" style="clear: both">';
-        echo JCckDev::renderLegend(JText::_( 'COM_CCK_FIELDS' ) );
-        echo JCckDev::renderLegend(JText::_( 'COM_CCK_CONFIG' ) );
-        echo JCckDev::renderLegend(JText::_( 'COM_CCK_CCK' ) );
-        echo '</ul>';
+        // MANY OPTIONS
+        echo JCckDev::renderSpacer( JText::_( 'COM_CCK_MANY' ), '', '2', array( 'class_sfx'=>'-2cols' ) );
+        echo JCckDev::renderForm( 'core_dev_select', @$options2['array_many'], $config, array( 'label'=>'ARRAY_MANY', 'selectlabel'=>'', 'defaultvalue'=>'fields', 'options'=>'FIELDS=fields||CONFIG=config||CCK=cck', 'storage_field'=>'json[options2][array_many]'), array(), 'array many' );
+        echo JCckDev::renderBlank( '<div class="fields-many">$fields[#value1#]->#value2#;</div><div class="config-many">$config[\'storages\'][#value1#][#value2#];</div><div class="cck-many">$cck->get#value1#(#value2#);</div>', 'Array:');
+        echo JCckDev::renderForm( 'core_dev_text', @$options2['many_id_value_1'], $config, array( 'label'=>'MANY_ID_VALUE_1', 'storage_field'=>'json[options2][many_id_value_1]' ), array(), 'many_id_value_1' );
+        echo JCckDev::renderForm( 'core_dev_text', @$options2['many_id_value_2'], $config, array( 'label'=>'MANY_ID_VALUE_2', 'storage_field'=>'json[options2][many_id_value_2]' ), array(), 'many_id_value_2' );
+        echo JCckDev::renderForm( 'core_dev_text', @$options2['many_name_value_1'], $config, array( 'label'=>'MANY_NAME_VALUE_1', 'storage_field'=>'json[options2][many_name_value_1]' ), array(), 'many_name_value_1' );
+        echo JCckDev::renderForm( 'core_dev_text', @$options2['many_name_value_2'], $config, array( 'label'=>'MANY_NAME_VALUE_2', 'storage_field'=>'json[options2][many_name_value_2]' ), array(), 'many_name_value_2' );
         
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['one_id_1'], $config, array( 'label'=>'ONE_ID_1', 'storage_field'=>'json[options2][one_id_1]' ), array(), 'fields one' );
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['one_id_2'], $config, array( 'label'=>'ONE_ID_2', 'storage_field'=>'json[options2][one_id_2]' ), array(), 'fields two' );
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['one_name_1'], $config, array( 'label'=>'ONE_NAME_1', 'storage_field'=>'json[options2][one_name_1]' ), array(), 'fields one' );
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['one_name_2'], $config, array( 'label'=>'ONE_NAME_2', 'storage_field'=>'json[options2][one_name_2]' ), array(), 'fields two' );
-        
+        // STORAGE
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );
 		echo JCckDev::getForm( 'core_storage', $this->item->storage, $config );
         ?>
@@ -53,9 +59,11 @@ defined( '_JEXEC' ) or die;
 </div>
 
 <script type="text/javascript">
-jQuery(document).ready(function($) {
+jQuery(document).ready(function($) 
+{
     $(".database.table").hide();
-    $('#json_options2_seblod').change(function(){
+    $('#json_options2_seblod').change(function()
+    {
         if ( this.value == '1')
         {
             $(".database.table").hide();
@@ -68,41 +76,43 @@ jQuery(document).ready(function($) {
         }
     });
 
-    $("#array-one-config, #array-one-cck").hide();
-    $('#json_options2_array_one').change(function(){
+    $(".config-one, .cck-one").hide();
+    $('#json_options2_array_one').change(function()
+    {
         if ( this.value == 'fields')
         {
-            $("#array-one-config, #array-one-cck").hide();
-            $("#array-one-fields").show();
+            $(".config-one, .cck-one").hide();
+            $(".fields-one").show();
         }
         else if ( this.value == 'config')
         {
-            $("#array-one-fields, #array-one-cck").hide();
-            $("#array-one-config").show();
+            $(".fields-one, .cck-one").hide();
+            $(".config-one").show();
         }
         else if ( this.value == 'cck')
         {
-            $("#array-one-config, #array-one-fields").hide();
-            $("#array-one-cck").show();
+            $(".fields-one, .config-one").hide();
+            $(".cck-one").show();
         }
     });
-
-    $("#array-many-config, #array-many-cck").hide();
-    $('#json_options2_array_many').change(function(){
+    
+    $(".config-many, .cck-many").hide();
+    $('#json_options2_array_many').change(function()
+    {
         if ( this.value == 'fields')
         {
-            $("#array-many-config, #array-many-cck").hide();
-            $("#array-many-fields").show();
+            $(".config-many, .cck-many").hide();
+            $(".fields-many").show();
         }
         else if ( this.value == 'config')
         {
-            $("#array-many-fields, #array-many-cck").hide();
-            $("#array-many-config").show();
+            $(".fields-many, .cck-many").hide();
+            $(".config-many").show();
         }
         else if ( this.value == 'cck')
         {
-            $("#array-many-config, #array-many-fields").hide();
-            $("#array-many-cck").show();
+            $(".fields-many, .config-many").hide();
+            $(".cck-many").show();
         }
     });
 });

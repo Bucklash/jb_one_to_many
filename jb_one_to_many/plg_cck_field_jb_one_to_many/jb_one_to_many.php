@@ -166,6 +166,10 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 				$one_id = $cck->get{$one_id_value_1}($one_id_value_2);
 				$one_name = $cck->get{$one_name_value_1}($one_name_value_2);
 				break;
+			case 'value':
+				$one_id = $one_id_value_1;
+				$one_name = $one_name_value_1;
+				break;
 			default:
 				$one_id = $fields[$one_id_value_1]->$one_id_value_2;
 				$one_name = $fields[$one_name_value_1]->$one_name_value_2;	
@@ -184,6 +188,10 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 			case 'cck':
 				$many_id = $cck->get{$many_id_value_1}($many_id_value_2);
 				$many_name = $cck->get{$many_name_value_1}($many_name_value_2);
+				break;
+			case 'value':
+				$many_id = $many_id_value_1;
+				$many_name = $many_name_value_1;
 				break;
 			default:
 				$many_id = $fields[$many_id_value_1]->$many_id_value_2;

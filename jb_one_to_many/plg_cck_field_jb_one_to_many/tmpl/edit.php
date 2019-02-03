@@ -27,10 +27,10 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
         echo JCckDev::renderForm( 'core_dev_text', @$options2['table'], $config, array( 'label'=>'DATABASE_TABLE', 'storage_field'=>'json[options2][table]' ), array(), 'database table' ); 
         echo JCckDev::renderForm( 'core_dev_text', @$options2['content_type'], $config, array( 'label'=>'CONTENT_TYPE', 'storage_field'=>'json[options2][content_type]' ), array(), 'database content-type' );
         echo JCckDev::renderBlank();
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['field_one_id'], $config, array( 'label'=>'FIELD_ONE_ID', 'storage_field'=>'json[options2][field_one_id]', 'required'=>'required' ) );
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['field_one_name'], $config, array( 'label'=>'FIELD_ONE_NAME', 'storage_field'=>'json[options2][field_one_name]', 'required'=>'required' ) );
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['field_many_id'], $config, array( 'label'=>'FIELD_MANY_ID', 'storage_field'=>'json[options2][field_many_id]', 'required'=>'required' ) );
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['field_many_name'], $config, array( 'label'=>'FIELD_MANY_NAME', 'storage_field'=>'json[options2][field_many_name]', 'required'=>'required' ) );
+        echo JCckDev::renderForm( 'core_dev_text', @$options2['field_one_id'], $config, array( 'label'=>'FIELD_ONE_ID', 'defaultvalue'=>'one_id', 'storage_field'=>'json[options2][field_one_id]', 'required'=>'required' ) );
+        echo JCckDev::renderForm( 'core_dev_text', @$options2['field_one_name'], $config, array( 'label'=>'FIELD_ONE_NAME', 'defaultvalue'=>'one_name', 'storage_field'=>'json[options2][field_one_name]', 'required'=>'required' ) );
+        echo JCckDev::renderForm( 'core_dev_text', @$options2['field_many_id'], $config, array( 'label'=>'FIELD_MANY_ID', 'defaultvalue'=>'many_id', 'storage_field'=>'json[options2][field_many_id]', 'required'=>'required' ) );
+        echo JCckDev::renderForm( 'core_dev_text', @$options2['field_many_name'], $config, array( 'label'=>'FIELD_MANY_NAME', 'defaultvalue'=>'many_name', 'storage_field'=>'json[options2][field_many_name]', 'required'=>'required' ) );
         echo JCckDev::renderForm( 'core_dev_text', @$options2['separator_many_id'], $config, array( 'label'=>'SEPARATOR_FOR_MANY_ID', 'defaultvalue'=>',', 'storage_field'=>'json[options2][separator_many_id]' ) );
         echo JCckDev::renderForm( 'core_dev_text', @$options2['separator_many_name'], $config, array( 'label'=>'SEPARATOR_FOR_MANY_NAME', 'defaultvalue'=>',', 'storage_field'=>'json[options2][separator_many_name]' ) );
         
@@ -99,7 +99,6 @@ jQuery(document).ready(function($)
         {
             $(".fields-one, .config-one, .cck-one").hide();
             $(".value-one").show();
-            $(".one_name_value_2").addClass('invisible'); // only one field required!
         }
     });
     
@@ -125,7 +124,6 @@ jQuery(document).ready(function($)
         {
             $(".fields-many, .config-many, .cck-many").hide();
             $(".value-many").show();
-            $(".many_name_value_2").addClass('invisible'); // only one field required!
         }
     });
 });

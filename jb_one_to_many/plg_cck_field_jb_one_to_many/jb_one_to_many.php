@@ -129,7 +129,9 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 		$event  =   ( isset( $options2['event'] ) && $field->state != 'disabled' ) ? $options2['event'] : 'afterstore';
 
 		// Table and Fields
+		$seblod  =   ( isset( $options2['seblod'] ) && $field->state != 'disabled' ) ? $options2['seblod'] : '1';
 		$table  =   ( isset( $options2['table'] ) && $field->state != 'disabled' ) ? $options2['table'] : '#__cck_store_free_map';
+		$content_type  =   ( isset( $options2['content_type'] ) && $field->state != 'disabled' ) ? $options2['content_type'] : 'map';
 		$field_one_id  =   ( isset( $options2['field_one_id'] ) && $field->state != 'disabled' ) ? $options2['field_one_id'] : 'one_id';
 		$field_one_name  =   ( isset( $options2['field_one_name'] ) && $field->state != 'disabled' ) ? $options2['field_one_name'] : 'one_name';
 		$field_many_id  =   ( isset( $options2['field_many_id'] ) && $field->state != 'disabled' ) ? $options2['field_many_id'] : 'many_id';
@@ -204,6 +206,9 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 		if ( $valid ) {
 			parent::g_addProcess( $event, self::$type, $config, array(
 				'event'=>$event,
+				'seblod'=>$seblod,
+				'table'=>$table,
+				'content_type'=>$content_type,
 				'field_one_id'=>$field_one_id,
 				'field_one_name'=>$field_one_name,
 				'field_many_id'=>$field_many_id,
@@ -283,24 +288,23 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
     protected static function _jbOneToMany($process)
     {
 
+		// if new data is not in old data = add
+		// if old data is not in new data = delete
 
-		// GET ARRAYS SORTED FIRST
-		
-		// get array of new 'many_ids'
+		// get 'new' data from form
 		$new['many_ids'] = explode($process['separator_many_id'], $process['many_id']); 
 		$new['many_names'] = explode($process['separator_many_name'], $process['many_name']); 
 		
-		// get all pk's related to one_id and one_name as 'old'
+		// get 'old' data from db (where name of one AND many are correct)
 		$content = new JCckContentFree; 
 		$data      = array( 
 			$process['field_one_id']=>$process['one_id'], 
-			$process['field_one_name']=>$process['one_name']
-		); 
-		
+			$process['field_one_name']=>$process['one_name'],
+			$process['field_many_name']=>$process['many_name']
+		);
 		$old['pks'] = $content->search( $process['content_type'], $data )->findPks();
-		
-		// get many_id from each $pks
-		foreach ( $old['pks'] as $key => $pk ) 
+		// get 'many_id' from each 'old' $pks
+		foreach ( $old['pks'] as $key => $pk )
 		{
 			
 			if ( $content->load( $pk )->isSuccessful() ) 
@@ -341,10 +345,34 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 					$process['field_many_id']=>$id,
 					$process['field_many_name']=>$new['many_names'][$key]
 				); 
+				switch ($seblod) 
+				{
+					case '0':
+						// if table use Joomla!...
+						// Create and populate an object.
+						$content = new stdClass();
+						$content->$process['field_one_id'] = $process['one_id'];
+						$content->$process['field_one_name'] = $process['one_name'];
+						$content->$process['field_many_id'] = $id;
+						$content->$process['field_many_name'] = $new['many_names'][$key];
 
-				if ( $content->create( $content_type, $data )->isSuccessful() ) 
-				{ 
-					// Do something 
+						// Insert the object into the user profile table.
+						$result = JFactory::getDbo()->insertObject($process['table'], $content);
+						break;
+					case '1':
+						// if content type use Seblod...
+						if ( $content->create( $content_type, $data )->isSuccessful() ) 
+						{ 
+							// Do something 
+						}
+						break;
+					
+					default:
+						if ( $content->create( $content_type, $data )->isSuccessful() ) 
+						{ 
+							// Do something 
+						}
+						break;
 				}
 
 			}	

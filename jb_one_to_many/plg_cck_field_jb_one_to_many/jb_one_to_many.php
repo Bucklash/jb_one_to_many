@@ -126,7 +126,7 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 		$options2   =   JCckDev::fromJSON( $field->options2 );
 
 		// Event
-		$event  =   ( isset( $options2['event'] ) && $field->state != 'disabled' ) ? $options2['event'] : 'afterstore';
+		$event  =   ( isset( $options2['event'] ) && $field->state != 'disabled' ) ? $options2['event'] : 'afterStore';
 
 		// Table and Fields
 		$seblod  =   ( isset( $options2['seblod'] ) && $field->state != 'disabled' ) ? $options2['seblod'] : '1';
@@ -142,69 +142,28 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 		
 		// Array One
 		$array_one  =   ( isset( $options2['array_one'] ) && $field->state != 'disabled' ) ? $options2['array_one'] : 'fields';
-		$one_id_value_1 = ( isset( $options2['one_id_value_1'] ) && $field->state != 'disabled' ) ? $options2['one_id_value_1'] : '';
-		$one_id_value_2 = ( isset( $options2['one_id_value_2'] ) && $field->state != 'disabled' ) ? $options2['one_id_value_2'] : '';
-		$one_name_value_1 = ( isset( $options2['one_name_value_1'] ) && $field->state != 'disabled' ) ? $options2['one_name_value_1'] : '';
-		$one_name_value_2 = ( isset( $options2['one_name_value_2'] ) && $field->state != 'disabled' ) ? $options2['one_name_value_2'] : '';
+		$one_id_value_1 = ( isset( $options2['one_id_value_1'] ) && $field->state != 'disabled' ) ? $options2['one_id_value_1'] : $options2['one_id_value_1'];
+		$one_id_value_2 = ( isset( $options2['one_id_value_2'] ) && $field->state != 'disabled' ) ? $options2['one_id_value_2'] : $options2['one_id_value_2'];
+		$one_name_value_1 = ( isset( $options2['one_name_value_1'] ) && $field->state != 'disabled' ) ? $options2['one_name_value_1'] : $options2['one_name_value_1'];
+		$one_name_value_2 = ( isset( $options2['one_name_value_2'] ) && $field->state != 'disabled' ) ? $options2['one_name_value_2'] : $options2['one_name_value_2'];
 		
 		// Array Many
 		$array_many  =   ( isset( $options2['array_many'] ) && $field->state != 'disabled' ) ? $options2['array_many'] : 'fields';
-		$many_id_value_1 = ( isset( $options2['many_id_value_1'] ) && $field->state != 'disabled' ) ? $options2['many_id_value_1'] : '';
-		$many_id_value_2 = ( isset( $options2['many_id_value_2'] ) && $field->state != 'disabled' ) ? $options2['many_id_value_2'] : '';
-		$many_name_value_1 = ( isset( $options2['many_name_value_1'] ) && $field->state != 'disabled' ) ? $options2['many_name_value_1'] : '';
-		$many_name_value_2 = ( isset( $options2['many_name_value_2'] ) && $field->state != 'disabled' ) ? $options2['many_name_value_2'] : '';
-		
-		switch ($array_one)
-		{
-			case 'fields':
-				$one_id = $fields[$one_id_value_1]->$one_id_value_2;
-				$one_name = $fields[$one_name_value_1]->$one_name_value_2;
-				break;
-			case 'config':
-				$one_id = $config['storages'][$one_id_value_1][$one_id_value_2];
-				$one_name = $fields[$one_name_value_1][$one_name_value_2];
-				break;
-			case 'cck':
-				$one_id = $cck->get{$one_id_value_1}($one_id_value_2);
-				$one_name = $cck->get{$one_name_value_1}($one_name_value_2);
-				break;
-			case 'value':
-				$one_id = $one_id_value_1;
-				$one_name = $one_name_value_1;
-				break;
-			default:
-				$one_id = $fields[$one_id_value_1]->$one_id_value_2;
-				$one_name = $fields[$one_name_value_1]->$one_name_value_2;	
-		}
-		
-		switch ($array_many)
-		{
-			case 'fields':
-				$many_id = $fields[$many_id_value_1]->$many_id_value_2;
-				$many_name = $fields[$many_name_value_1]->$many_name_value_2;
-				break;
-			case 'config':
-				$many_id = $config['storages'][$many_id_value_1][$many_id_value_2];
-				$many_name = $fields[$many_name_value_1][$many_name_value_2];
-				break;
-			case 'cck':
-				$many_id = $cck->get{$many_id_value_1}($many_id_value_2);
-				$many_name = $cck->get{$many_name_value_1}($many_name_value_2);
-				break;
-			case 'value':
-				$many_id = $many_id_value_1;
-				$many_name = $many_name_value_1;
-				break;
-			default:
-				$many_id = $fields[$many_id_value_1]->$many_id_value_2;
-				$many_name = $fields[$many_name_value_1]->$many_name_value_2;	
-		}
+		$many_id_value_1 = ( isset( $options2['many_id_value_1'] ) && $field->state != 'disabled' ) ? $options2['many_id_value_1'] : $options2['many_id_value_1'];
+		$many_id_value_2 = ( isset( $options2['many_id_value_2'] ) && $field->state != 'disabled' ) ? $options2['many_id_value_2'] : $options2['many_id_value_2'];
+		$many_name_value_1 = ( isset( $options2['many_name_value_1'] ) && $field->state != 'disabled' ) ? $options2['many_name_value_1'] : $options2['many_name_value_1'];
+		$many_name_value_2 = ( isset( $options2['many_name_value_2'] ) && $field->state != 'disabled' ) ? $options2['many_name_value_2'] : $options2['many_name_value_2'];
+
+		$isNew      =   ( $config['pk'] ) ? 0 : 1;
 		// Validate
 		parent::g_onCCK_FieldPrepareStore_Validation( $field, $name, $value, $config );
-		
+
+		// 
+		$valid      =   1;
 		// Add Process
 		if ( $valid ) {
 			parent::g_addProcess( $event, self::$type, $config, array(
+				'isNew'=>$isNew,
 				'event'=>$event,
 				'seblod'=>$seblod,
 				'table'=>$table,
@@ -214,14 +173,18 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 				'field_many_id'=>$field_many_id,
 				'field_many_name'=>$field_many_name,
 				'array_one'=>$array_one,
-				'one_id'=>$one_id,
-				'one_name'=>$one_name,
+				'one_id_value_1'=>$one_id_value_1,
+				'one_id_value_2'=>$one_id_value_2,
+				'one_name_value_1'=>$one_name_value_1,
+				'one_name_value_2'=>$one_name_value_2,
 				'array_many'=>$array_many,
-				'many_id'=>$many_id,
-				'many_name'=>$many_name,
+				'many_id_value_1'=>$many_id_value_1,
+				'many_id_value_2'=>$many_id_value_2,
+				'many_name_value_1'=>$many_name_value_1,
+				'many_name_value_2'=>$many_name_value_2,
 				'separator_many_id'=>$separator_many_id,
-				'separator_many_name'=>$separator_many_name
-				// 'valid'=>$valid
+				'separator_many_name'=>$separator_many_name,
+				'valid'=>$valid
 			));
 		}
 
@@ -231,9 +194,7 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 		}
 		$field->value	=	$value;
 
-
 		parent::g_onCCK_FieldPrepareStore( $field, $name, $value, $config );
-
 
 	}
 	
@@ -266,15 +227,13 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 	// onCCK_FieldBeforeStore
 	public static function onCCK_FieldBeforeStore( $process, &$fields, &$storages, &$config = array() )
 	{
-		self::_jbOneToMany($process);
+		self::_jbOneToMany($process, $fields);
 	}
 	
 	// onCCK_FieldAfterStore
 	public static function onCCK_FieldAfterStore( $process, &$fields, &$storages, &$config = array() )
 	{
-
-        self::_jbOneToMany($process);
-
+        self::_jbOneToMany($process, $fields);
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff & Script
@@ -284,25 +243,110 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
     * 
     *
     */
-    // protected static function _jbMapProcess( &$pdf, $data, $serialized = 0)
-    protected static function _jbOneToMany($process)
+    protected static function _jbOneToMany($process, &$fields)
     {
+
+		// 'isNew'=>
+		$isNew = $process['isNew'];
+		// 'event'=>
+		$event = $process['event'];
+		// 'seblod'=>
+		$seblod = $process['seblod'];
+		// 'table'=>
+		$table = $process['table'];
+		// 'content_type'=>
+		$content_type = $process['content_type'];
+		// 'field_one_id'=>
+		$field_one_id = $process['field_one_id'];
+		// 'field_one_name'=>
+		$field_one_name = $process['field_one_name'];
+		// 'field_many_id'=>
+		$field_many_id = $process['field_many_id'];
+		// 'field_many_name'=>
+		$field_many_name = $process['field_many_name'];
+		// 'array_one'=>
+		$array_one = $process['array_one'];
+		// 'one_id_value_1'=>
+		$one_id_value_1 = $process['one_id_value_1'];
+		// 'one_id_value_2'=>
+		$one_id_value_2 = $process['one_id_value_2'];
+		// 'one_name_value_1'=>
+		$one_name_value_1 = $process['one_name_value_1'];
+		// 'one_name_value_2'=>
+		$one_name_value_2 = $process['one_name_value_2'];
+		// 'array_many'=>
+		$array_many = $process['array_many'];
+		// 'many_id_value_1'=>
+		$many_id_value_1 = $process['many_id_value_1'];
+		// 'many_id_value_2'=>
+		$many_id_value_2 = $process['many_id_value_2'];
+		// 'many_name_value_1'=>
+		$many_name_value_1 = $process['many_name_value_1'];
+		// 'many_name_value_2'=>
+		$many_name_value_2 = $process['many_name_value_2'];
+
+		// get values of fields based on settings defined in plugin
+		switch ($array_one)
+		{
+			case 'fields':
+				$one_id = $fields[$one_id_value_1]->$one_id_value_2;
+				$one_name = $fields[$one_name_value_1]->$one_name_value_2;
+				break;
+			case 'config':
+				$one_id = $config['storages'][$one_id_value_1][$one_id_value_2];
+				$one_name = $config['storages'][$one_name_value_1][$one_name_value_2];
+				break;
+			case 'cck':
+				$one_id = $cck->get{$one_id_value_1}($one_id_value_2);
+				$one_name = $cck->get{$one_name_value_1}($one_name_value_2);
+				break;
+			case 'value':
+				$one_id = $one_id_value_1;
+				$one_name = $one_name_value_1;
+				break;
+			default:
+				$one_id = $fields[$one_id_value_1]->$one_id_value_2;
+				$one_name = $fields[$one_name_value_1]->$one_name_value_2;	
+		}
+		
+		switch ($array_many)
+		{
+			case 'fields':
+				$many_id = $fields[$many_id_value_1]->$many_id_value_2;
+				$many_name = $fields[$many_name_value_1]->$many_name_value_2;
+				break;
+			case 'config':
+				$many_id = $config['storages'][$many_id_value_1][$many_id_value_2];
+				$many_name = $config['storages'][$many_name_value_1][$many_name_value_2];
+				break;
+			case 'cck':
+				$many_id = $cck->get{$many_id_value_1}($many_id_value_2);
+				$many_name = $cck->get{$many_name_value_1}($many_name_value_2);
+				break;
+			case 'value':
+				$many_id = $many_id_value_1;
+				$many_name = $many_name_value_1;
+				break;
+			default:
+				$many_id = $fields[$many_id_value_1]->$many_id_value_2;
+				$many_name = $fields[$many_name_value_1]->$many_name_value_2;	
+		}
 
 		// if new data is not in old data = add
 		// if old data is not in new data = delete
 
 		// get 'new' data from form
-		$new['many_ids'] = explode($process['separator_many_id'], $process['many_id']); 
-		$new['many_names'] = explode($process['separator_many_name'], $process['many_name']); 
+		$new['many_ids'] = explode($separator_many_id, $many_id); 
+		$new['many_names'] = explode($separator_many_name, $many_name); 
 		
 		// get 'old' data from db (where name of one AND many are correct)
 		$content = new JCckContentFree; 
 		$data      = array( 
-			$process['field_one_id']=>$process['one_id'], 
-			$process['field_one_name']=>$process['one_name'],
-			$process['field_many_name']=>$process['many_name']
+			$field_one_id=>$one_id, 
+			$field_one_name=>$one_name,
+			$field_many_name=>$many_name
 		);
-		$old['pks'] = $content->search( $process['content_type'], $data )->findPks();
+		$old['pks'] = $content->search( $content_type, $data )->findPks();
 		// get 'many_id' from each 'old' $pks
 		foreach ( $old['pks'] as $key => $pk )
 		{
@@ -310,7 +354,7 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 			if ( $content->load( $pk )->isSuccessful() ) 
 			{ 
 
-				$old['many_ids'][$key] = $content->get($process['field_many_id']);
+				$old['many_ids'][$key] = $content->get($field_many_id);
 	
 			}	
 			
@@ -340,24 +384,26 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 			{
 
 				$data      = array( 
-					$process['field_one_id']=>$process['one_id'],
-					$process['field_one_name']=>$process['one_name'],
-					$process['field_many_id']=>$id,
-					$process['field_many_name']=>$new['many_names'][$key]
+					$field_one_id=>$one_id,
+					$field_one_name=>$one_name,
+					$field_many_id=>$id,
+					$field_many_name=>$new['many_names'][$key]
 				); 
+				$message = $field_one_id;
+				JFactory::getApplication()->enqueueMessage($message , 'onCCK_FieldAfterStore');
 				switch ($seblod) 
 				{
 					case '0':
 						// if table use Joomla!...
 						// Create and populate an object.
 						$content = new stdClass();
-						$content->$process['field_one_id'] = $process['one_id'];
-						$content->$process['field_one_name'] = $process['one_name'];
-						$content->$process['field_many_id'] = $id;
-						$content->$process['field_many_name'] = $new['many_names'][$key];
+						$content->$field_one_id = $one_id;
+						$content->$field_one_name = $one_name;
+						$content->$field_many_id = $id;
+						$content->$field_many_name = $new['many_names'][$key];
 
 						// Insert the object into the user profile table.
-						$result = JFactory::getDbo()->insertObject($process['table'], $content);
+						$result = JFactory::getDbo()->insertObject($table, $content);
 						break;
 					case '1':
 						// if content type use Seblod...

@@ -20,7 +20,7 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
         
         // GLOBAL SETTINGS
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_GLOBAL_SETTINGS' ), JText::_( 'COM_CCK_GLOBAL_SETTINGS_DESC' ), '2' );
-        echo JCckDev::renderForm( 'core_dev_select', @$options2['event'], $config, array( 'label'=>'STORAGE_EVENT', 'selectlabel'=>'', 'defaultvalue'=>'afterstore', 'options'=>'BeforeStore=beforestore||AfterStore=afterstore', 'storage_field'=>'json[options2][event]' ) );
+        echo JCckDev::renderForm( 'core_dev_select', @$options2['event'], $config, array( 'label'=>'STORAGE_EVENT', 'selectlabel'=>'', 'defaultvalue'=>'afterStore', 'options'=>'BeforeStore=beforeStore||AfterStore=afterStore', 'storage_field'=>'json[options2][event]' ) );
         echo JCckDev::renderBlank();
         echo JCckDev::renderForm( 'core_dev_select', @$options2['seblod'], $config, array( 'label'=>'SEBLOD_DATA', 'selectlabel'=>'', 'defaultvalue'=>'1', 'options'=>'Yes=1||No=0', 'storage_field'=>'json[options2][seblod]' ) );
         echo JCckDev::renderBlank();

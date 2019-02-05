@@ -264,6 +264,10 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 		$field_many_id = $process['field_many_id'];
 		// 'field_many_name'=>
 		$field_many_name = $process['field_many_name'];
+		// 'separator_many_id'=>
+		$separator_many_id = $process['separator_many_id'];
+		// 'separator_many_name'=>
+		$separator_many_name = $process['separator_many_name'];
 		// 'array_one'=>
 		$array_one = $process['array_one'];
 		// 'one_id_value_1'=>
@@ -284,7 +288,12 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 		$many_name_value_1 = $process['many_name_value_1'];
 		// 'many_name_value_2'=>
 		$many_name_value_2 = $process['many_name_value_2'];
-
+		// arrays used to do stuff
+		$new['many_ids'] = array();
+		$new['many_names'] = array();
+		$old['pks'] = array();
+		$old['many_ids'] = array();
+		$old['many_names'] = array();
 		// get values of fields based on settings defined in plugin
 		switch ($array_one)
 		{
@@ -335,96 +344,97 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 		// if new data is not in old data = add
 		// if old data is not in new data = delete
 
-		// get 'new' data from form
-		$new['many_ids'] = explode($separator_many_id, $many_id); 
-		$new['many_names'] = explode($separator_many_name, $many_name); 
+		// Get many ID's
 		
-		// get 'old' data from db (where name of one AND many are correct)
-		$content = new JCckContentFree; 
+		// ... from form as 'new'
+		$new['many_ids'] = explode($separator_many_id, $many_id);
+
+		// ... from db as 'old'
+		$content = new JCckContentFree;
+		$content->setTable( '#__cck_store_free_map' );
 		$data      = array( 
 			$field_one_id=>$one_id, 
 			$field_one_name=>$one_name,
 			$field_many_name=>$many_name
 		);
 		$old['pks'] = $content->search( $content_type, $data )->findPks();
-		// get 'many_id' from each 'old' $pks
-		foreach ( $old['pks'] as $key => $pk )
-		{
-			
+
+		foreach ( $content->find( $content_type, $data )->getPks() as $key => $pk ) 
+		{ 
 			if ( $content->load( $pk )->isSuccessful() ) 
 			{ 
-
+				// Get each many_id and assign to array
 				$old['many_ids'][$key] = $content->get($field_many_id);
-	
 			}	
-			
 		} 
-
 
 		// NOW ADD OR DELETE MAP DATA
-		
 		// DELETE
-		foreach ( $old['many_ids'] as $key => $id ) 
-		{ 
-
-			if ( !in_array($id, $new['many_ids']) )
-			{
-
-				$content->delete( $old['pks'][$key] );
-
-			}
-			
-		} 
+		if (count($old['many_ids']) > 0)
+		{
+			foreach ( $old['many_ids'] as $key => $id ) 
+			{ 
+				if ( !in_array($id, $new['many_ids']) )
+				{
+					// delete requires $pk
+					$content->delete( $old['pks'][$key] );	
+				}
+			} 
+		}
 
 		// ADD
-		foreach ( $new['many_ids'] as $key => $id) 
-		{ 
-
-			if (!in_array($id, $old['many_ids']))
-			{
-
-				$data      = array( 
-					$field_one_id=>$one_id,
-					$field_one_name=>$one_name,
-					$field_many_id=>$id,
-					$field_many_name=>$new['many_names'][$key]
-				); 
-				$message = $field_one_id;
-				JFactory::getApplication()->enqueueMessage($message , 'onCCK_FieldAfterStore');
-				switch ($seblod) 
+		if (count($new['many_ids']) > 0)
+		{
+			foreach ( $new['many_ids'] as $key => $id) 
+			{ 
+				if (!in_array($id, $old['many_ids']))
 				{
-					case '0':
-						// if table use Joomla!...
-						// Create and populate an object.
-						$content = new stdClass();
-						$content->$field_one_id = $one_id;
-						$content->$field_one_name = $one_name;
-						$content->$field_many_id = $id;
-						$content->$field_many_name = $new['many_names'][$key];
+					$data      = array( 
+						$field_one_id=>$one_id,
+						$field_one_name=>$one_name,
+						$field_many_id=>$id,
+						$field_many_name=>$many_name
+					); 
 
-						// Insert the object into the user profile table.
-						$result = JFactory::getDbo()->insertObject($table, $content);
-						break;
-					case '1':
-						// if content type use Seblod...
-						if ( $content->create( $content_type, $data )->isSuccessful() ) 
-						{ 
-							// Do something 
-						}
-						break;
-					
-					default:
-						if ( $content->create( $content_type, $data )->isSuccessful() ) 
-						{ 
-							// Do something 
-						}
-						break;
+					switch ($seblod) 
+					{
+						case '0':
+							// if table use Joomla!...
+							// Create and populate an object.
+							$content = new stdClass();
+							$content->$field_one_id = $one_id;
+							$content->$field_one_name = $one_name;
+							$content->$field_many_id = $id;
+							$content->$field_many_name = $many_name;
+
+							// Insert the object into the user profile table.
+							$result = JFactory::getDbo()->insertObject($table, $content);
+							break;
+						case '1':
+							// if content type use Seblod...
+							if ( $content->create( $content_type, $data )->isSuccessful() ) 
+							{ 
+								$message = 'Stored '.$one_name.' with '.$many_name.', id of '.$id;
+								JFactory::getApplication()->enqueueMessage($message , 'success');
+							}
+							else 
+							{
+								$message = 'Not stored '.$one_name.' with '.$many_name.', id of '.$id;
+								JFactory::getApplication()->enqueueMessage($message , 'success');
+							}
+							break;
+						
+						default:
+							if ( $content->create( $content_type, $data )->isSuccessful() ) 
+							{ 
+								$message = 'Stored '.$one_name.' with '.$many_name.', id of '.$id;
+								JFactory::getApplication()->enqueueMessage($message , 'success');
+							}
+							break;
+					}
 				}
-
-			}	
-			
-		} 
-
+			} 
+		}
     }
-	//
+	// --_jbOneToMany
 }

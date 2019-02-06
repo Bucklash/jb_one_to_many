@@ -22,15 +22,19 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_GLOBAL_SETTINGS' ), JText::_( 'COM_CCK_GLOBAL_SETTINGS_DESC' ), '2' );
         echo JCckDev::renderForm( 'core_dev_select', @$options2['event'], $config, array( 'label'=>'STORAGE_EVENT', 'selectlabel'=>'', 'defaultvalue'=>'afterStore', 'options'=>'BeforeStore=beforeStore||AfterStore=afterStore', 'storage_field'=>'json[options2][event]' ) );
         echo JCckDev::renderBlank();
-        echo JCckDev::renderForm( 'core_dev_select', @$options2['seblod'], $config, array( 'label'=>'SEBLOD_DATA', 'selectlabel'=>'', 'defaultvalue'=>'1', 'options'=>'Yes=1||No=0', 'storage_field'=>'json[options2][seblod]' ) );
-        echo JCckDev::renderBlank();
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['table'], $config, array( 'label'=>'DATABASE_TABLE', 'storage_field'=>'json[options2][table]' ), array(), 'database table' ); 
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['content_type'], $config, array( 'label'=>'CONTENT_TYPE', 'storage_field'=>'json[options2][content_type]' ), array(), 'database content-type' );
-        echo JCckDev::renderBlank();
+        echo JCckDev::renderForm( 'core_dev_select', @$options2['object'], $config, array( 'label'=>'OBJECT', 'selectlabel'=>'', 'defaultvalue'=>'Free', 'options'=>'JOOMLA=Joomla||ARTICLE=Article||CATEGORY=Category||FREE=Free||USERNOTE=UserNote||USER=User||USERGROUP=UserGroup', 'storage_field'=>'json[options2][object]' ), array(), 'object' );
+        echo '<div style="clear: left;width: 100%; height:1px"></div>';
+        echo JCckDev::renderBlank( '<div style="clear:left"><div style="width:50%; text-display:inline-block;" class="table">i.e. #__some_table;</div><div style="width:50%; display:inline-block;" class="content-type">i.e. map (<- name of content type)</div></div>', 'Values:');
+        echo '<div style="clear: left;width: 100%; height:1px"></div>';
+        echo JCckDev::renderForm( 'core_dev_text', @$options2['table'], $config, array( 'label'=>'TABLE', 'selectlabel'=>'', 'defaultvalue'=>'', 'storage_field'=>'json[options2][table]' ), array(), 'table' );
+        echo JCckDev::renderForm( 'core_dev_text', @$options2['content_type'], $config, array( 'label'=>'CONTENT_TYPE', 'storage_field'=>'json[options2][location]' ), array(), 'content-type' );
+        echo '<div style="clear: left;width: 100%; height:1px"></div>';
         echo JCckDev::renderForm( 'core_dev_text', @$options2['field_one_id'], $config, array( 'label'=>'FIELD_ONE_ID', 'defaultvalue'=>'one_id', 'storage_field'=>'json[options2][field_one_id]', 'required'=>'required' ) );
         echo JCckDev::renderForm( 'core_dev_text', @$options2['field_one_name'], $config, array( 'label'=>'FIELD_ONE_NAME', 'defaultvalue'=>'one_name', 'storage_field'=>'json[options2][field_one_name]', 'required'=>'required' ) );
+        echo '<div style="clear: left;width: 100%; height:1px"></div>';
         echo JCckDev::renderForm( 'core_dev_text', @$options2['field_many_id'], $config, array( 'label'=>'FIELD_MANY_ID', 'defaultvalue'=>'many_id', 'storage_field'=>'json[options2][field_many_id]', 'required'=>'required' ) );
         echo JCckDev::renderForm( 'core_dev_text', @$options2['field_many_name'], $config, array( 'label'=>'FIELD_MANY_NAME', 'defaultvalue'=>'many_name', 'storage_field'=>'json[options2][field_many_name]', 'required'=>'required' ) );
+        echo '<div style="clear: left;width: 100%; height:1px"></div>';
         echo JCckDev::renderForm( 'core_dev_text', @$options2['separator_many_id'], $config, array( 'label'=>'SEPARATOR_FOR_MANY_ID', 'defaultvalue'=>',', 'storage_field'=>'json[options2][separator_many_id]' ) );
         echo JCckDev::renderForm( 'core_dev_text', @$options2['separator_many_name'], $config, array( 'label'=>'SEPARATOR_FOR_MANY_NAME', 'defaultvalue'=>',', 'storage_field'=>'json[options2][separator_many_name]' ) );
         
@@ -62,18 +66,21 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
 <script type="text/javascript">
 jQuery(document).ready(function($) 
 {
-    $(".database.table").hide();
-    $('#json_options2_seblod').change(function()
+    $('#json_options2_object').change(function()
     {
-        if ( this.value == '1')
+        if ( this.value == 'Joomla' )
         {
-            $(".database.table").hide();
-            $(".database.content-type").show();
+            $(".content-type").hide();
+            $(".table").show();
+        } 
+        else if ( this.value == 'Free' )
+        {
+            $(".content-type, .table").show();
         }
-        else if ( this.value == '0')
+        else
         {
-            $(".database.content-type").hide();
-            $(".database.table").show();
+            $(".table").hide();
+            $(".content-type").show();
         }
     });
 

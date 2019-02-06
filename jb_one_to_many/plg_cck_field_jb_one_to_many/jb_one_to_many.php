@@ -441,6 +441,7 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 					{
 						// delete requires $pk
 						$content->delete( $old['many_pks'][$key] );	
+						
 					}
 				} 
 			}

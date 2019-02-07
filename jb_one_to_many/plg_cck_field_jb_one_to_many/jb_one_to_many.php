@@ -132,7 +132,7 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 		
 		// Table and DB Fields
 		$object  =   ( isset( $options2['object'] ) ) ? $options2['object'] : 'Free';
-		$content_type  =   ( isset( $options2['content_type'] ) ) ? $options2['content_type'] : '';
+		$content_type  =   ( isset( $field->extended ) ) ? $field->extended : '';
 		$table  =   ( isset( $options2['table'] ) ) ? $options2['table'] : '';
 		$field_one_id  =   ( isset( $options2['field_one_id'] ) ) ? $options2['field_one_id'] : 'one_id';
 		$field_one_name  =   ( isset( $options2['field_one_name'] ) ) ? $options2['field_one_name'] : 'one_name';
@@ -140,21 +140,18 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 		$field_many_name  =   ( isset( $options2['field_many_name'] ) ) ? $options2['field_many_name'] : 'many_name';
 		// Separator
 		$separator_many_id  =   ( isset( $options2['separator_many_id'] ) ) ? $options2['separator_many_id'] : ',';
-		$separator_many_name  =   ( isset( $options2['separator_many_name'] ) ) ? $options2['separator_many_name'] : ',';
 			
 		// Array One
 		$array_one  =   ( isset( $options2['array_one'] ) ) ? $options2['array_one'] : 'fields';
 		$one_id_value_1 = ( isset( $options2['one_id_value_1'] ) ) ? $options2['one_id_value_1'] : $options2['one_id_value_1'];
 		$one_id_value_2 = ( isset( $options2['one_id_value_2'] ) ) ? $options2['one_id_value_2'] : $options2['one_id_value_2'];
 		$one_name_value_1 = ( isset( $options2['one_name_value_1'] ) ) ? $options2['one_name_value_1'] : $options2['one_name_value_1'];
-		$one_name_value_2 = ( isset( $options2['one_name_value_2'] ) ) ? $options2['one_name_value_2'] : $options2['one_name_value_2'];
 		
 		// Array Many
 		$array_many  =   ( isset( $options2['array_many'] ) ) ? $options2['array_many'] : 'fields';
 		$many_id_value_1 = ( isset( $options2['many_id_value_1'] ) ) ? $options2['many_id_value_1'] : $options2['many_id_value_1'];
 		$many_id_value_2 = ( isset( $options2['many_id_value_2'] ) ) ? $options2['many_id_value_2'] : $options2['many_id_value_2'];
 		$many_name_value_1 = ( isset( $options2['many_name_value_1'] ) ) ? $options2['many_name_value_1'] : $options2['many_name_value_1'];
-		$many_name_value_2 = ( isset( $options2['many_name_value_2'] ) ) ? $options2['many_name_value_2'] : $options2['many_name_value_2'];
 
 		// 
 		$valid      =   1;
@@ -175,17 +172,14 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 				'field_many_id'=>$field_many_id,
 				'field_many_name'=>$field_many_name,
 				'separator_many_id'=>$separator_many_id,
-				'separator_many_name'=>$separator_many_name,
 				'array_one'=>$array_one,
 				'one_id_value_1'=>$one_id_value_1,
 				'one_id_value_2'=>$one_id_value_2,
 				'one_name_value_1'=>$one_name_value_1,
-				'one_name_value_2'=>$one_name_value_2,
 				'array_many'=>$array_many,
 				'many_id_value_1'=>$many_id_value_1,
 				'many_id_value_2'=>$many_id_value_2,
 				'many_name_value_1'=>$many_name_value_1,
-				'many_name_value_2'=>$many_name_value_2,
 				'valid'=>$valid
 			));
 		}
@@ -245,8 +239,8 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
     * 
     *
     */
-    protected static function _jbOneToMany($process, &$fields)
-    {
+	protected static function _jbOneToMany($process, &$fields)
+	{
 
 		// 'isNew'=>
 		$isNew = $process['isNew'];
@@ -268,8 +262,6 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 		$field_many_name = $process['field_many_name'];
 		// 'separator_many_id'=>
 		$separator_many_id = $process['separator_many_id'];
-		// 'separator_many_name'=>
-		$separator_many_name = $process['separator_many_name'];
 		// 'array_one'=>
 		$array_one = $process['array_one'];
 		// 'one_id_value_1'=>
@@ -278,8 +270,6 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 		$one_id_value_2 = $process['one_id_value_2'];
 		// 'one_name_value_1'=>
 		$one_name_value_1 = $process['one_name_value_1'];
-		// 'one_name_value_2'=>
-		$one_name_value_2 = $process['one_name_value_2'];
 		// 'array_many'=>
 		$array_many = $process['array_many'];
 		// 'many_id_value_1'=>
@@ -288,8 +278,6 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 		$many_id_value_2 = $process['many_id_value_2'];
 		// 'many_name_value_1'=>
 		$many_name_value_1 = $process['many_name_value_1'];
-		// 'many_name_value_2'=>
-		$many_name_value_2 = $process['many_name_value_2'];
 		// arrays used to do stuff, 'new' is from form, 'old' is from db
 		$new['many_ids'] = array();
 		$new['many_names'] = array();
@@ -302,7 +290,7 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 		{
 			case 'fields':
 				$one_id = $fields[$one_id_value_1]->$one_id_value_2;
-				$one_name = $fields[$one_name_value_1]->$one_name_value_2;
+				$one_name = $one_name_value_1;
 				break;
 			case 'config':
 				$one_id = $config['storages'][$one_id_value_1][$one_id_value_2];
@@ -310,7 +298,7 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 				break;
 			case 'cck':
 				$one_id = $cck->get{$one_id_value_1}($one_id_value_2);
-				$one_name = $cck->get{$one_name_value_1}($one_name_value_2);
+				$one_name = $one_name_value_1;
 				break;
 			case 'value':
 				$one_id = $one_id_value_1;
@@ -318,22 +306,22 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 				break;
 			default:
 				$one_id = $fields[$one_id_value_1]->$one_id_value_2;
-				$one_name = $fields[$one_name_value_1]->$one_name_value_2;	
+				$one_name = $one_name_value_1;
 		}
 		
 		switch ($array_many)
 		{
 			case 'fields':
 				$many_id = $fields[$many_id_value_1]->$many_id_value_2;
-				$many_name = $fields[$many_name_value_1]->$many_name_value_2;
+				$many_name = $many_name_value_1;
 				break;
 			case 'config':
 				$many_id = $config['storages'][$many_id_value_1][$many_id_value_2];
-				$many_name = $config['storages'][$many_name_value_1][$many_name_value_2];
+				$many_name = $many_name_value_1;
 				break;
 			case 'cck':
 				$many_id = $cck->get{$many_id_value_1}($many_id_value_2);
-				$many_name = $cck->get{$many_name_value_1}($many_name_value_2);
+				$many_name = $many_name_value_1;
 				break;
 			case 'value':
 				$many_id = $many_id_value_1;
@@ -341,7 +329,7 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 				break;
 			default:
 				$many_id = $fields[$many_id_value_1]->$many_id_value_2;
-				$many_name = $fields[$many_name_value_1]->$many_name_value_2;	
+				$many_name = $many_name_value_1;	
 		}
 
 		// if new data is not in old data = add
@@ -419,7 +407,6 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 				$field_one_name=>$one_name,
 				$field_many_name=>$many_name
 			);
-
 			foreach ( $content->find( $content_type, $data )->getPks() as $key => $pk ) 
 			{ 
 
@@ -435,6 +422,7 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 			// DELETE
 			if (count($old['many_ids']) > 0)
 			{
+
 				foreach ( $old['many_ids'] as $key => $id ) 
 				{ 
 					if ( !in_array($id, $new['many_ids']) )
@@ -448,10 +436,12 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 			// ADD
 			if (count($new['many_ids']) > 0)
 			{
+
 				foreach ( $new['many_ids'] as $key => $id) 
 				{ 
-					if (!in_array($id, $old['many_ids']))
+					if ( ( $id > 0 ) && ( !in_array($id, $old['many_ids']) ) )
 					{
+
 						$data      = array( 
 							$field_one_id=>$one_id,
 							$field_one_name=>$one_name,
@@ -468,12 +458,13 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 						else 
 						{
 							$message = 'Not stored '.$one_name.' with '.$many_name.', id of '.$id;
-							$message .=  $content->getLog();
-							JFactory::getApplication()->enqueueMessage($message , 'success');
+							JFactory::getApplication()->enqueueMessage($message , 'error');
 						}
 					}
 				} 
 			} //--ADD
 		}
-    } // --_jbOneToMany
+	} // --_jbOneToMany
 }
+
+

@@ -27,7 +27,9 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
         echo JCckDev::renderBlank( '<div style="clear:left"><div style="width:50%; text-display:inline-block;" class="table">i.e. #__some_table;</div><div style="width:50%; display:inline-block;" class="content-type">i.e. map (<- name of content type)</div></div>', 'Values:');
         echo '<div style="clear: left;width: 100%; height:1px"></div>';
         echo JCckDev::renderForm( 'core_dev_text', @$options2['table'], $config, array( 'label'=>'TABLE', 'selectlabel'=>'', 'defaultvalue'=>'', 'storage_field'=>'json[options2][table]' ), array(), 'table' );
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['content_type'], $config, array( 'label'=>'CONTENT_TYPE', 'storage_field'=>'json[options2][content_type]' ), array(), 'content-type' );
+        echo JCckDev::renderForm( 'core_form', $this->item->extended, $config, array( 'label'=>'CONTENT_TYPE_FORM', 'selectlabel'=>'',
+							'options2'=>'{"query":"","table":"#__cck_core_types","name":"title","where":"published!=-44","value":"name","orderby":"title","orderby_direction":"ASC","limit":""}',
+							'required'=>'required', 'storage_field'=>'extended' ) );
         echo '<div style="clear: left;width: 100%; height:1px"></div>';
         echo JCckDev::renderForm( 'core_dev_text', @$options2['field_one_id'], $config, array( 'label'=>'FIELD_ONE_ID', 'defaultvalue'=>'one_id', 'storage_field'=>'json[options2][field_one_id]', 'required'=>'required' ) );
         echo JCckDev::renderForm( 'core_dev_text', @$options2['field_one_name'], $config, array( 'label'=>'FIELD_ONE_NAME', 'defaultvalue'=>'one_name', 'storage_field'=>'json[options2][field_one_name]', 'required'=>'required' ) );
@@ -36,7 +38,6 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
         echo JCckDev::renderForm( 'core_dev_text', @$options2['field_many_name'], $config, array( 'label'=>'FIELD_MANY_NAME', 'defaultvalue'=>'many_name', 'storage_field'=>'json[options2][field_many_name]', 'required'=>'required' ) );
         echo '<div style="clear: left;width: 100%; height:1px"></div>';
         echo JCckDev::renderForm( 'core_dev_text', @$options2['separator_many_id'], $config, array( 'label'=>'SEPARATOR_FOR_MANY_ID', 'defaultvalue'=>',', 'storage_field'=>'json[options2][separator_many_id]' ) );
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['separator_many_name'], $config, array( 'label'=>'SEPARATOR_FOR_MANY_NAME', 'defaultvalue'=>',', 'storage_field'=>'json[options2][separator_many_name]' ) );
         
         // ONE OPTIONS
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_ONE' ), '', '2', array( 'class_sfx'=>'-2cols' ) );
@@ -45,7 +46,6 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
         echo JCckDev::renderForm( 'core_dev_text', @$options2['one_id_value_1'], $config, array( 'label'=>'ONE_ID_VALUE_1', 'storage_field'=>'json[options2][one_id_value_1]' ), array(), 'one_id_value_1' );
         echo JCckDev::renderForm( 'core_dev_text', @$options2['one_id_value_2'], $config, array( 'label'=>'ONE_ID_VALUE_2', 'storage_field'=>'json[options2][one_id_value_2]' ), array(), 'one_id_value_2' );
         echo JCckDev::renderForm( 'core_dev_text', @$options2['one_name_value_1'], $config, array( 'label'=>'ONE_NAME_VALUE_1', 'storage_field'=>'json[options2][one_name_value_1]' ), array(), 'one_name_value_1' );
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['one_name_value_2'], $config, array( 'label'=>'ONE_NAME_VALUE_2', 'storage_field'=>'json[options2][one_name_value_2]' ), array(), 'one_name_value_2' );
         
         // MANY OPTIONS
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_MANY' ), '', '2', array( 'class_sfx'=>'-2cols' ) );
@@ -54,7 +54,6 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
         echo JCckDev::renderForm( 'core_dev_text', @$options2['many_id_value_1'], $config, array( 'label'=>'MANY_ID_VALUE_1', 'storage_field'=>'json[options2][many_id_value_1]' ), array(), 'many_id_value_1' );
         echo JCckDev::renderForm( 'core_dev_text', @$options2['many_id_value_2'], $config, array( 'label'=>'MANY_ID_VALUE_2', 'storage_field'=>'json[options2][many_id_value_2]' ), array(), 'many_id_value_2' );
         echo JCckDev::renderForm( 'core_dev_text', @$options2['many_name_value_1'], $config, array( 'label'=>'MANY_NAME_VALUE_1', 'storage_field'=>'json[options2][many_name_value_1]' ), array(), 'many_name_value_1' );
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['many_name_value_2'], $config, array( 'label'=>'MANY_NAME_VALUE_2', 'storage_field'=>'json[options2][many_name_value_2]' ), array(), 'many_name_value_2' );
         
         // STORAGE
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );

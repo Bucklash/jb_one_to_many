@@ -148,13 +148,13 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 		$one_id_separator = ( isset( $options2['one_id_separator'] ) ) ? $options2['one_id_separator'] : '';
 		$one_id_value_1 = ( isset( $options2['one_id_value_1'] ) ) ? $options2['one_id_value_1'] : '';
 		$one_id_value_2 = ( isset( $options2['one_id_value_2'] ) ) ? $options2['one_id_value_2'] : '';
-		$one_name_value_1 = ( isset( $options2['one_name_value_1'] ) ) ? $options2['one_name_value_1'] : '';
+		$one_name = ( isset( $options2['one_name'] ) ) ? $options2['one_name'] : '';
 		
 		// Array Many
 		$array_many  =   ( isset( $options2['array_many'] ) ) ? $options2['array_many'] : 'fields';
 		$many_id_value_1 = ( isset( $options2['many_id_value_1'] ) ) ? $options2['many_id_value_1'] : '';
 		$many_id_value_2 = ( isset( $options2['many_id_value_2'] ) ) ? $options2['many_id_value_2'] : '';
-		$many_name_value_1 = ( isset( $options2['many_name_value_1'] ) ) ? $options2['many_name_value_1'] : '';
+		$many_name = ( isset( $options2['many_name'] ) ) ? $options2['many_name'] : '';
 
 		// 
 		$valid      =   1;
@@ -181,11 +181,11 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 				'one_id_separator'=>$one_id_separator,
 				'one_id_value_1'=>$one_id_value_1,
 				'one_id_value_2'=>$one_id_value_2,
-				'one_name_value_1'=>$one_name_value_1,
+				'one_name'=>$one_name,
 				'array_many'=>$array_many,
 				'many_id_value_1'=>$many_id_value_1,
 				'many_id_value_2'=>$many_id_value_2,
-				'many_name_value_1'=>$many_name_value_1,
+				'many_name'=>$many_name,
 				'valid'=>$valid
 			));
 		}
@@ -306,12 +306,12 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 			foreach ($oneId as $key => $value) 
 			{
 				$process['one_id'] = $value;
-				self::_jbMapOneToMany($process, $fields);
+				self::_jbOneToMany($process, $fields);
 			}
 		}
 		else 
 		{
-			self::_jbMapOneToMany($process, $fields);
+			self::_jbOneToMany($process, $fields);
 		}
 	} // --_jbOneToManyWrapper
 

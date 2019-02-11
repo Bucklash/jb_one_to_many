@@ -248,6 +248,8 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 	protected static function _jbOneToManyWrapper($process, &$fields)
 	{
 		
+		// _jbMapOneToMany deals with a singular one_id at a time, so need to find out if there are multiple one_id's to process
+		// Might as well format/process both one_id AND many_id at the same time
 		// 'array_one'=>
 		$array_one = $process['array_one'];
 		// 'one_id_value_1'=>
@@ -278,6 +280,23 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 				break;
 			default:
 				$process['one_id'] = $fields[$one_id_value_1]->$one_id_value_2;
+		}
+		switch ($array_many)
+		{
+			case 'fields':
+				$process['many_id'] = $fields[$many_id_value_1]->$many_id_value_2;
+				break;
+			case 'config':
+				$process['many_id'] = $config['storages'][$many_id_value_1][$many_id_value_2];
+				break;
+			case 'cck':
+				$process['many_id'] = $cck->get{$many_id_value_1}($many_id_value_2);
+				break;
+			case 'value':
+				$process['many_id'] = $many_id_value_1;
+				break;
+			default:
+				$process['many_id'] = $fields[$many_id_value_1]->$many_id_value_2;
 		}
 
 		// are there multiple 'one_id'
@@ -320,20 +339,14 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 		$field_many_name = $process['field_many_name'];
 		// 'separator_many_id'=>
 		$separator_many_id = $process['separator_many_id'];
-		// 'array_one'=>
-		$array_one = $process['array_one'];
 		// 'one_id'=>
 		$one_id = $process['one_id'];
-		// 'one_name_value_1'=>
-		$one_name_value_1 = $process['one_name_value_1'];
-		// 'array_many'=>
-		$array_many = $process['array_many'];
-		// 'many_id_value_1'=>
-		$many_id_value_1 = $process['many_id_value_1'];
-		// 'many_id_value_2'=>
-		$many_id_value_2 = $process['many_id_value_2'];
-		// 'many_name_value_1'=>
-		$many_name_value_1 = $process['many_name_value_1'];
+		// 'one_name'=>
+		$one_name = $process['one_name'];
+		// 'many_id'=>
+		$many_id = $process['many_id'];
+		// 'many_name'=>
+		$many_name = $process['many_name'];
 		// arrays used to do stuff, 'new' is from form, 'old' is from db
 		$new['many_ids'] = array();
 		$new['many_names'] = array();
@@ -463,7 +476,7 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 						$content->$field_many_id = $id;
 						$content->$field_many_name = $many_name;
 
-						// Insert the object into the user content table.
+						// Insert the object into the table.
 						$result = JFactory::getDbo()->insertObject($table, $content);
 	
 					}

@@ -143,15 +143,17 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 			
 		// Array One
 		$array_one  =   ( isset( $options2['array_one'] ) ) ? $options2['array_one'] : 'fields';
-		$one_id_value_1 = ( isset( $options2['one_id_value_1'] ) ) ? $options2['one_id_value_1'] : $options2['one_id_value_1'];
-		$one_id_value_2 = ( isset( $options2['one_id_value_2'] ) ) ? $options2['one_id_value_2'] : $options2['one_id_value_2'];
-		$one_name_value_1 = ( isset( $options2['one_name_value_1'] ) ) ? $options2['one_name_value_1'] : $options2['one_name_value_1'];
+		$one_id_value_1 = ( isset( $options2['one_id_value_1'] ) ) ? $options2['one_id_value_1'] : '';
+		$one_id_value_multiple = ( isset( $options2['one_id_value_multiple'] ) ) ? $options2['one_id_value_multiple'] : ''; // maybe there are multiple 'one_id' i.e. "234,345,456" to map
+		$one_id_value_separator = ( isset( $options2['one_id_value_separator'] ) ) ? $options2['one_id_value_separator'] : '';
+		$one_id_value_2 = ( isset( $options2['one_id_value_2'] ) ) ? $options2['one_id_value_2'] : '';
+		$one_name_value_1 = ( isset( $options2['one_name_value_1'] ) ) ? $options2['one_name_value_1'] : '';
 		
 		// Array Many
 		$array_many  =   ( isset( $options2['array_many'] ) ) ? $options2['array_many'] : 'fields';
-		$many_id_value_1 = ( isset( $options2['many_id_value_1'] ) ) ? $options2['many_id_value_1'] : $options2['many_id_value_1'];
-		$many_id_value_2 = ( isset( $options2['many_id_value_2'] ) ) ? $options2['many_id_value_2'] : $options2['many_id_value_2'];
-		$many_name_value_1 = ( isset( $options2['many_name_value_1'] ) ) ? $options2['many_name_value_1'] : $options2['many_name_value_1'];
+		$many_id_value_1 = ( isset( $options2['many_id_value_1'] ) ) ? $options2['many_id_value_1'] : '';
+		$many_id_value_2 = ( isset( $options2['many_id_value_2'] ) ) ? $options2['many_id_value_2'] : '';
+		$many_name_value_1 = ( isset( $options2['many_name_value_1'] ) ) ? $options2['many_name_value_1'] : '';
 
 		// 
 		$valid      =   1;
@@ -173,6 +175,8 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 				'field_many_name'=>$field_many_name,
 				'separator_many_id'=>$separator_many_id,
 				'array_one'=>$array_one,
+				'one_id_value_multiple'=>$one_id_value_multiple,
+				'one_id_value_separator'=>$one_id_value_separator,
 				'one_id_value_1'=>$one_id_value_1,
 				'one_id_value_2'=>$one_id_value_2,
 				'one_name_value_1'=>$one_name_value_1,
@@ -223,13 +227,13 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 	// onCCK_FieldBeforeStore
 	public static function onCCK_FieldBeforeStore( $process, &$fields, &$storages, &$config = array() )
 	{
-		self::_jbOneToMany($process, $fields);
+		self::_jbOneToManyWrapper($process, $fields);
 	}
 	
 	// onCCK_FieldAfterStore
 	public static function onCCK_FieldAfterStore( $process, &$fields, &$storages, &$config = array() )
 	{
-        self::_jbOneToMany($process, $fields);
+        self::_jbOneToManyWrapper($process, $fields);
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff & Script
@@ -239,9 +243,27 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
     * 
     *
     */
-	protected static function _jbOneToMany($process, &$fields)
+	protected static function _jbOneToManyWrapper($process, &$fields)
 	{
 
+		// are there multiple 'one_id'
+		if( (1 === $process['one_id_value_multiple']) && ('' != $process['one_id_value_separator']) )
+		{
+			$oneId = explode($process['one_id_value_separator'], $process['one_id_value_id']);
+			foreach ($oneId as $key => $value) 
+			{
+				$process['one_id_value_id'] = $value;
+				self::_jbMapOneToMany($process, $fields);
+			}
+		}
+		else 
+		{
+			self::_jbMapOneToMany($process, $fields);
+		}
+	} // --_jbOneToManyWrapper
+
+	protected static function _jbOneToMany($process, &$fields)
+	{
 		// 'isNew'=>
 		$isNew = $process['isNew'];
 		// 'event'=>
@@ -264,6 +286,10 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 		$separator_many_id = $process['separator_many_id'];
 		// 'array_one'=>
 		$array_one = $process['array_one'];
+		// 'one_id_value_multiple'=>
+		$one_id_value_multiple = $process['one_id_value_multiple'];
+		// 'one_id_value_separator'=>
+		$one_id_value_separator = $process['one_id_value_separator'];
 		// 'one_id_value_1'=>
 		$one_id_value_1 = $process['one_id_value_1'];
 		// 'one_id_value_2'=>

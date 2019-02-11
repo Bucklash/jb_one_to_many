@@ -43,6 +43,8 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_ONE' ), '', '2', array( 'class_sfx'=>'-2cols' ) );
         echo JCckDev::renderForm( 'core_dev_select', @$options2['array_one'], $config, array( 'label'=>'ARRAY_ONE', 'selectlabel'=>'', 'defaultvalue'=>'fields', 'options'=>'FIELDS=fields||CONFIG=config||CCK=cck||VALUE=value', 'storage_field'=>'json[options2][array_one]'), array(), 'array one' );
         echo JCckDev::renderBlank( '<div class="fields-one">$fields[#value1#]->#value2#;</div><div class="config-one">$config[\'storages\'][#value1#][#value2#];</div><div class="cck-one">$cck->get#value1#(#value2#);</div><div class="value-one">#value1#</div>', 'Value:');
+        echo JCckDev::renderForm( 'core_dev_select', @$options2['one_id_value_multiple'], $config, array( 'label'=>'ONE_ID_VALUE_MULTIPLE', 'selectlabel'=>'', 'defaultvalue'=>'0', 'options'=>'YES=Yes||No=0', 'storage_field'=>'json[options2][one_id_value_multiple]'), array(), 'one-multiple' );
+        echo JCckDev::renderForm( 'core_dev_text', @$options2['one_id_value_separator'], $config, array( 'label'=>'ONE_ID_VALUE_SEPARATOR', 'storage_field'=>'json[options2][one_id_value_separator]' ), array(), 'one-separator' );
         echo JCckDev::renderForm( 'core_dev_text', @$options2['one_id_value_1'], $config, array( 'label'=>'ONE_ID_VALUE_1', 'storage_field'=>'json[options2][one_id_value_1]' ), array(), 'one_id_value_1' );
         echo JCckDev::renderForm( 'core_dev_text', @$options2['one_id_value_2'], $config, array( 'label'=>'ONE_ID_VALUE_2', 'storage_field'=>'json[options2][one_id_value_2]' ), array(), 'one_id_value_2' );
         echo JCckDev::renderForm( 'core_dev_text', @$options2['one_name_value_1'], $config, array( 'label'=>'ONE_NAME_VALUE_1', 'storage_field'=>'json[options2][one_name_value_1]' ), array(), 'one_name_value_1' );
@@ -80,6 +82,19 @@ jQuery(document).ready(function($)
         {
             $(".table").hide();
             $(".content-type").show();
+        }
+    });
+
+    $(".one-separator").hide();
+    $('#json_options2_one_id_value_multiple').change(function()
+    {
+        if ( this.value == '1')
+        {
+            $(".one-separator").show();
+        }
+        else 
+        {
+            $(".one-separator").hide();
         }
     });
 

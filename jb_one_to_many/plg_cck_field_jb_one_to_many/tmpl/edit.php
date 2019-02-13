@@ -27,11 +27,11 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
         echo JCckDev::renderBlank();
         echo JCckDev::renderForm( 'core_dev_select', @$options2['object'], $config, array( 'label'=>'OBJECT', 'selectlabel'=>'', 'defaultvalue'=>'Free', 'options'=>'JOOMLA=Joomla||ARTICLE=Article||CATEGORY=Category||FREE=Free||USERNOTE=UserNote||USER=User||USERGROUP=UserGroup', 'storage_field'=>'json[options2][object]' ), array(), 'object' );
         echo '<div style="clear: left;width: 100%; height:1px"></div>';
-        echo JCckDev::renderBlank( '<div style="clear:left"><div style="width:50%; text-display:inline-block;" class="table">i.e. #__some_table;</div><div id="extended" style="width:50%; display:inline-block;" class="extended">i.e. map (<- name of content type)</div><div style="width:50%; display:inline-block;" class="table_pk">i.e. id (<- primary key of table)</div></div>', 'Values:');
+        echo JCckDev::renderBlank( '<div style="clear:left"><div style="width:50%; text-display:inline-block;" class="table">i.e. #__some_table;</div><div style="width:50%; display:inline-block;" class="extended">i.e. map (<- name of content type)</div><div style="width:50%; display:inline-block;" class="table_pk">i.e. id (<- primary key of table)</div></div>', 'Values:');
         echo '<div style="clear: left;width: 100%; height:1px"></div>';
         echo JCckDev::renderForm( 'core_dev_text', @$options2['table'], $config, array( 'label'=>'TABLE', 'selectlabel'=>'', 'defaultvalue'=>'', 'storage_field'=>'json[options2][table]' ), array(), 'table' );
         echo JCckDev::renderForm( 'core_dev_text', @$options2['table_pk'], $config, array( 'label'=>'TABLE_PK', 'selectlabel'=>'', 'defaultvalue'=>'id', 'storage_field'=>'json[options2][table_pk]' ), array(), 'table_pk' );
-        echo JCckDev::renderForm( 'core_form', $this->item->extended, $config, array( 'label'=>'CONTENT_TYPE_FORM', 'selectlabel'=>'', 'options2'=>'{"query":"","table":"#__cck_core_types","name":"title","where":"published!=-44","value":"name","orderby":"title","orderby_direction":"ASC","limit":""}', 'required'=>'required', 'storage_field'=>'extended' ) );
+        echo JCckDev::renderForm( 'core_form', $this->item->extended, $config, array( 'label'=>'CONTENT_TYPE_FORM', 'selectlabel'=>'', 'options2'=>'{"query":"","table":"#__cck_core_types","name":"title","where":"published!=-44","value":"name","orderby":"title","orderby_direction":"ASC","limit":""}', 'required'=>'required', 'storage_field'=>'extended' ), array(), 'extended' );
         echo '<div style="clear: left;width: 100%; height:1px"></div>';
         echo JCckDev::renderForm( 'core_dev_text', @$options2['field_one_id'], $config, array( 'label'=>'FIELD_ONE_ID', 'defaultvalue'=>'one_id', 'storage_field'=>'json[options2][field_one_id]', 'required'=>'required' ) );
         echo JCckDev::renderForm( 'core_dev_text', @$options2['field_one_name'], $config, array( 'label'=>'FIELD_ONE_NAME', 'defaultvalue'=>'one_name', 'storage_field'=>'json[options2][field_one_name]', 'required'=>'required' ) );
@@ -40,7 +40,7 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
         echo JCckDev::renderForm( 'core_dev_text', @$options2['field_many_name'], $config, array( 'label'=>'FIELD_MANY_NAME', 'defaultvalue'=>'many_name', 'storage_field'=>'json[options2][field_many_name]', 'required'=>'required' ) );
         echo '<div style="clear: left;width: 100%; height:1px"></div>';
         echo JCckDev::renderForm( 'core_dev_select', @$options2['invert'], $config, array( 'label'=>'INVERT', 'selectlabel'=>'', 'defaultvalue'=>'0', 'options'=>'Yes=1||No=0', 'storage_field'=>'json[options2][invert]'), array() );
-        echo JCckDev::renderBlank( '<div class="">Are you in One or Many form? Invert if in Many Form"</div>', 'Value:');
+        echo JCckDev::renderBlank( '<div class="">Are you in One or Many form? Invert if in Many Form</div>', 'Value:');
         echo '<div style="clear: left;width: 100%; height:1px"></div>';
         echo JCckDev::renderForm( 'core_dev_text', @$options2['separator'], $config, array( 'label'=>'SEPARATOR', 'defaultvalue'=>',', 'storage_field'=>'json[options2][separator]' ) );
         
@@ -61,6 +61,14 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
         echo JCckDev::renderForm( 'core_dev_text', @$options2['many_id_value_2'], $config, array( 'label'=>'MANY_ID_VALUE_2', 'storage_field'=>'json[options2][many_id_value_2]' ), array(), 'many_id_value_2' );
         echo JCckDev::renderForm( 'core_dev_text', @$options2['many_name'], $config, array( 'label'=>'MANY_NAME', 'storage_field'=>'json[options2][many_name]' ), array(), 'many_name' );
         
+        // UPDATE OPTIONS
+        echo JCckDev::renderSpacer( JText::_( 'COM_CCK_UPDATE' ), '', '2', array( 'class_sfx'=>'-2cols' ) );
+        echo JCckDev::renderForm( 'core_dev_select', @$options2['update_many'], $config, array( 'label'=>'UPDATE_MANY', 'selectlabel'=>'', 'defaultvalue'=>'0', 'options'=>'Yes=1||No=0', 'storage_field'=>'json[options2][update_many]'), array() );
+        echo JCckDev::renderForm( 'core_dev_select', @$options2['update_object'], $config, array( 'label'=>'UPDATE_OBJECT', 'selectlabel'=>'', 'defaultvalue'=>'Free', 'options'=>'JOOMLA=Joomla||ARTICLE=Article||CATEGORY=Category||FREE=Free||USERNOTE=UserNote||USER=User||USERGROUP=UserGroup', 'storage_field'=>'json[options2][update_object]' ), array(), 'update_object' );
+        echo '<div style="clear: left;width: 100%; height:1px"></div>';
+        echo JCckDev::renderForm( 'core_form', @$options2['update_content_type'], $config, array( 'label'=>'CONTENT_TYPE_FORM', 'selectlabel'=>'', 'options2'=>'{"query":"","table":"#__cck_core_types","name":"title","where":"published!=-44","value":"name","orderby":"title","orderby_direction":"ASC","limit":""}', 'required'=>'required', 'storage_field'=>'json[options2][update_content_type]' ), array(), 'update_content_type' );
+        echo JCckDev::renderForm( 'core_dev_text', @$options2['update_field_value_1'], $config, array( 'label'=>'UPDATE_FIELD_VALUE_1', 'defaultvalue'=>'', 'storage_field'=>'json[options2][update_field_value_1]' ), array(), 'update_field_value_1' );
+
         // STORAGE
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );
 		echo JCckDev::getForm( 'core_storage', $this->item->storage, $config );
@@ -76,18 +84,18 @@ jQuery(document).ready(function($)
     {
         if ( this.value == 'Joomla' )
         {
-            $("#extended").hide();
+            $(".extended").hide();
             $(".table, .table_pk").show();
         } 
         else if ( this.value == 'Free' )
         {
-            $("#extended, .table").show();
             $(".table_pk").hide();
+            $(".extended, .table").show();
         }
         else
         {
             $(".table, .table_pk").hide();
-            $("#extended").show();
+            $(".extended").show();
         }
     });
 

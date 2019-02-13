@@ -168,7 +168,7 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 		$field_one_name  =   ( isset( $options2['field_one_name'] ) ) ? $options2['field_one_name'] : 'one_name';
 		$field_many_id  =   ( isset( $options2['field_many_id'] ) ) ? $options2['field_many_id'] : 'many_id';
 		$field_many_name  =   ( isset( $options2['field_many_name'] ) ) ? $options2['field_many_name'] : 'many_name';
-		$invert = ( isset( $options2['invert'] ) ) ? $options2['invert'] : 0; // maybe there are multiple 'one_id' i.e. "234,345,456" to map
+		$invert = ( isset( $options2['invert'] ) ) ? $options2['invert'] : 0; // are you in the 'many' content type
 		$separator  =   ( isset( $options2['separator'] ) ) ? $options2['separator'] : ',';
 			
 		// Array One
@@ -184,6 +184,13 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 		$many_id_value_1 = ( isset( $options2['many_id_value_1'] ) ) ? $options2['many_id_value_1'] : '';
 		$many_id_value_2 = ( isset( $options2['many_id_value_2'] ) ) ? $options2['many_id_value_2'] : '';
 		$many_name = ( isset( $options2['many_name'] ) ) ? $options2['many_name'] : '';
+		
+		// Update (Many)
+		// Values used to update the content for each 'Many' Item
+		$update_many  =   ( isset( $options2['update_many'] ) ) ? $options2['update_many'] : 0;
+		$update_object  =   ( isset( $options2['update_object'] ) ) ? $options2['update_object'] : '';
+		$update_content_type  =   ( isset( $options2['update_content_type'] ) ) ? $options2['update_content_type'] : '';
+		$update_field_value_1  =   ( isset( $options2['update_field_value_1'] ) ) ? $options2['update_field_value_1'] : '';
 
 		// Validate
 		parent::g_onCCK_FieldPrepareStore_Validation( $field, $name, $value, $config );
@@ -205,7 +212,7 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 				'field_many_id' => $field_many_id,
 				'field_many_name' => $field_many_name,
 				'one_id_multiple' => (int) $one_id_multiple,
-				'invert' => $invert,
+				'invert' => (int) $invert,
 				'separator' => $separator,
 				'array_one' => $array_one,
 				'one_id_multiple' => (int) $one_id_multiple,
@@ -217,6 +224,10 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 				'many_id_value_1' => $many_id_value_1,
 				'many_id_value_2' => $many_id_value_2,
 				'many_name' => $many_name,
+				'update_many' => $update_many,
+				'update_object' => $update_object,
+				'update_content_type' => $update_content_type,
+				'update_field_value_1' => $update_field_value_1,
 				'valid' => (int) $valid
 			));
 		}
@@ -413,6 +424,14 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 		$many_id = $invert ?  $process['one_id'] : $process['many_id'];
 		// 'many_name'=>
 		$many_name = $invert ? $process['one_name'] : $process['many_name'];
+		// 'update_many'=>
+		$update_many = $process['update_many'];
+		// 'update_object'=>
+		$update_object = $process['update_object'];
+		// 'update_content_type'=>
+		$update_content_type = $process['update_content_type'];
+		// 'update_field_value_1'=>
+		$update_field_value_1 = $process['update_field_value_1'];
 		// arrays used to do stuff, 'new' is from form, 'old' is from db
 		$new['many_ids'] = $invert ? explode($separator, $process['one_id']) : explode($separator, $process['many_id']);
 		$old['many_pks'] = array();
@@ -426,44 +445,7 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 
 		// Get Multiple ID's from DB
 		// ... Seblod and Joomla! have different methods...
-		switch ($object) 
-		{
-			case 'Joomla':
-				# code...
-				$content = new stdClass();
-				break;
-			case 'Free':
-				# code...
-				$content = new JCckContentFree;
-				$content->setTable( $table );
-				break;
-			case 'Article':
-				$content = new JCckContentArticle;
-				# code...
-				break;
-			case 'Category':
-				$content = new JCckContentCategory;
-				# code...
-				break;
-			case 'UserNote':
-				$content = new JCckContentUserNote;
-				# code...
-				break;
-			case 'User':
-				$content = new JCckContentUser;
-				# code...
-				break;
-			case 'UserGroup':
-				$content = new JCckContentUserGroup;
-				# code...
-				break;
-				
-			default:
-				# code...
-				$content = new JCckContentFree;
-				$content->setTable( $table );
-				break;
-		}
+		$content = self::_jbContent($object, $table);
 
 		if ($object === 'Joomla') 
 		{
@@ -557,55 +539,178 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 				}
 			}
 
-			// NOW ADD OR DELETE MAP DATA
-			// DELETE
+			// Collate Data for Delete and Add...also used by Update
 			foreach ( $old['many_ids'] as $key => $id )
 			{
-				if ( (!in_array($id, $new['many_ids'])) || (count($new['many_ids']) > 1) )
+				// delete date if id is 0
+				if ( (!in_array($id, $new['many_ids'])) || ($id > 1) )
 				{
-					// delete requires $pk
-					$deleted = $content->delete( $old['many_pks'][$key] );
-					if ( $deleted ) 
-					{ 
-						$message = 'Deleted '.$one_name.' ('.$one_id.') with '.$many_name.' ('.$id.')';
-					}
-					else
-					{
-						$message = 'Not Deleted '.$one_name.' ('.$one_id.') with '.$many_name.' ('.$id.')';
-					}
-					JFactory::getApplication()->enqueueMessage($message , 'Warning');
+					$map['delete'][$key] = $id;
 				}
 			}
-
-			// ADD
+	
 			foreach ( $new['many_ids'] as $key => $id )
 			{
 				// only add if ID is 1 or above
-				if ( ($one_id > 0 ) && ( $id > 0 ) && ( !in_array($id, $old['many_ids']) ) )
+				if ( (!in_array($id, $old['many_ids']) && ($one_id > 0) && ($id > 0) ) )
 				{
-					$data = array( 
-						$field_one_id => (int) $one_id,
-						$field_one_name => $one_name,
-						$field_many_id => (int) $id,
-						$field_many_name => $many_name
-					);
+					$map['add'][$key] = $id;
+				}
+			}
+			
+			// NOW ADD OR DELETE, OR UPDATE MAP DATA
+			// DELETE
+			foreach ($map['delete'] as $key => $id) 
+			{
+				// delete requires $pk
+				$deleted = $content->delete( $old['many_pks'][$key] );
+				if ( $deleted ) 
+				{ 
+					$message = 'Deleted '.$one_name.' ('.$one_id.') with '.$many_name.' ('.$id.')';
+					// if update
+				}
+				else
+				{
+					$message = 'Not Deleted '.$one_name.' ('.$one_id.') with '.$many_name.' ('.$id.')';
+				}
+				JFactory::getApplication()->enqueueMessage($message , 'Warning');
+			}
 
-					// Create
-					if ( $content->create( $content_type, $data )->isSuccessful() ) 
-					{ 
-						$message = 'Stored '.$one_name.' ('.$one_id.') with '.$many_name.', ('.$id.')';
-						JFactory::getApplication()->enqueueMessage($message , 'success');
-					}
-					else 
-					{
-						$message = 'Not Stored '.$one_name.' ('.$one_id.') with '.$many_name.', ('.$id.')';
-						JFactory::getApplication()->enqueueMessage($message , 'error');
-					}
+
+			// ADD
+			foreach ($map['add'] as $key => $id)
+			{
+				$data = array( 
+					$field_one_id => (int) $one_id,
+					$field_one_name => $one_name,
+					$field_many_id => (int) $id,
+					$field_many_name => $many_name
+				);
+
+				// Create
+				if ( $content->create( $content_type, $data )->isSuccessful() ) 
+				{ 
+					$message = 'Stored '.$one_name.' ('.$one_id.') with '.$many_name.' ('.$id.')';
+					JFactory::getApplication()->enqueueMessage($message , 'success');
+				}
+				else 
+				{
+					$message = 'Not Stored '.$one_name.' ('.$one_id.') with '.$many_name.' ('.$id.')';
+					JFactory::getApplication()->enqueueMessage($message , 'error');
 				}
 			} //--ADD
 
+			// UPDATE
+			// Update the 'many' table my adding or deleting the one_id form the list in the db.field
+			if ($update_many) 
+			{
+				$updater = self::_jbContent($update_object);
+
+				foreach ( $updater->find( $update_content_type )->getPks() as $pk ) 
+				{
+					// UPDATE the DELETE's in Many content type
+					foreach ($map['delete'] as $key => $id) 
+					{
+						if ( $updater->load( $id )->isSuccessful() ) 
+						{
+							$message = 'load is successful (Delete)'.$one_name.' ('.$one_id.') from '.$many_name.' ('.$id.')';
+							JFactory::getApplication()->enqueueMessage($message , 'success');
+							// update data by deleting the many_id's
+							$updaterValue = $updater->getProperty( $update_field_value_1 );
+							$updaterValue = explode($separator, $updaterValue);
+							$updaterValue = array_diff($updaterValue,array($one_id));
+							$updaterValue = implode($separator, $updaterValue);
+
+							$updated = $updater->setProperty( $update_field_value_1, $updaterValue )->store();
+							
+							if ( $updated ) 
+							{ 
+								$message = 'Updated (Delete)'.$one_name.' ('.$one_id.') from '.$many_name.' ('.$id.')';
+								JFactory::getApplication()->enqueueMessage($message , 'warning');
+							}
+							else 
+							{
+								$message = 'Updated (Not Deleted)'.$one_name.' ('.$one_id.') from '.$many_name.' ('.$id.')';
+								JFactory::getApplication()->enqueueMessage($message , 'warning');
+							}
+						}
+					}
+					// UPDATE with ADD's
+					foreach ($map['add'] as $key => $id) 
+					{
+						if ( $updater->load( $id )->isSuccessful() ) 
+						{
+							$message = 'load is successful (Add)'.$one_name.' ('.$one_id.') from '.$many_name.' ('.$id.')';
+							JFactory::getApplication()->enqueueMessage($message , 'success');
+							// update data by deleting the many_id's
+							$updaterValue = $updater->getProperty( $update_field_value_1 );
+							$updaterValue = explode($separator, $updaterValue);
+							$updaterValue[] = $one_id;
+							$updaterValue = implode($separator, $updaterValue);
+
+							$updated = $updater->setProperty( $update_field_value_1, $updaterValue )->store();
+							
+							if ( $updated ) 
+							{ 
+								$message = 'Updated (Add) '.$one_name.' ('.$one_id.') from '.$many_name.' ('.$id.')';
+								JFactory::getApplication()->enqueueMessage($message , 'warning');
+							}
+							else 
+							{
+								$message = 'Updated (Not Added) '.$one_name.' ('.$one_id.') from '.$many_name.' ('.$id.')';
+								JFactory::getApplication()->enqueueMessage($message , 'warning');
+							}
+						}
+					}    
+				}
+			}
 		}
 	} // --_jbOneToMany
+
+	// return a content object
+	protected static function _jbContent($object, $table = '')
+	{
+		switch ($object) 
+		{
+			case 'Joomla':
+				# code...
+				$content = new stdClass();
+				break;
+			case 'Free':
+				# code...
+				$content = new JCckContentFree;
+				$content->setTable( $table );
+				break;
+			case 'Article':
+				$content = new JCckContentArticle;
+				# code...
+				break;
+			case 'Category':
+				$content = new JCckContentCategory;
+				# code...
+				break;
+			case 'UserNote':
+				$content = new JCckContentUserNote;
+				# code...
+				break;
+			case 'User':
+				$content = new JCckContentUser;
+				# code...
+				break;
+			case 'UserGroup':
+				$content = new JCckContentUserGroup;
+				# code...
+				break;
+				
+			default:
+				# code...
+				$content = new JCckContentFree;
+				$content->setTable( $table );
+				break;
+		}
+
+		return  $content;
+	}
 }
 
 

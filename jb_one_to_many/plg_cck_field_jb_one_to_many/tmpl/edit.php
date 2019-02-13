@@ -17,7 +17,10 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
     <ul class="adminformlist adminformlist-2cols">
         <?php
         echo JCckDev::renderForm( 'core_label', $this->item->label, $config );
-        
+        echo '<li><label>'.JText::_( 'COM_CCK_ACTIVATE_MAP' ).'</label>'
+        .	 JCckDev::getForm( 'core_options_send', @$options2['send'], $config )
+        .	 JCckDev::getForm( 'core_options_from_param', @$options2['send_field'], $config, array( 'label'=>'Activating Field', 'defaultvalue'=>'', 'size'=>'14', 'storage_field'=>'json[options2][send_field]' ) )
+        .	 '</li>';
         // GLOBAL SETTINGS
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_GLOBAL_SETTINGS' ), JText::_( 'COM_CCK_GLOBAL_SETTINGS_DESC' ), '2' );
         echo JCckDev::renderForm( 'core_dev_select', @$options2['event'], $config, array( 'label'=>'STORAGE_EVENT', 'selectlabel'=>'', 'defaultvalue'=>'afterStore', 'options'=>'BeforeStore=beforeStore||AfterStore=afterStore', 'storage_field'=>'json[options2][event]' ) );
@@ -28,9 +31,7 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
         echo '<div style="clear: left;width: 100%; height:1px"></div>';
         echo JCckDev::renderForm( 'core_dev_text', @$options2['table'], $config, array( 'label'=>'TABLE', 'selectlabel'=>'', 'defaultvalue'=>'', 'storage_field'=>'json[options2][table]' ), array(), 'table' );
         echo JCckDev::renderForm( 'core_dev_text', @$options2['table_pk'], $config, array( 'label'=>'TABLE_PK', 'selectlabel'=>'', 'defaultvalue'=>'id', 'storage_field'=>'json[options2][table_pk]' ), array(), 'table_pk' );
-        echo JCckDev::renderForm( 'core_form', $this->item->extended, $config, array( 'label'=>'CONTENT_TYPE_FORM', 'selectlabel'=>'',
-							'options2'=>'{"query":"","table":"#__cck_core_types","name":"title","where":"published!=-44","value":"name","orderby":"title","orderby_direction":"ASC","limit":""}',
-							'required'=>'required', 'storage_field'=>'extended' ) );
+        echo JCckDev::renderForm( 'core_form', $this->item->extended, $config, array( 'label'=>'CONTENT_TYPE_FORM', 'selectlabel'=>'', 'options2'=>'{"query":"","table":"#__cck_core_types","name":"title","where":"published!=-44","value":"name","orderby":"title","orderby_direction":"ASC","limit":""}', 'required'=>'required', 'storage_field'=>'extended' ) );
         echo '<div style="clear: left;width: 100%; height:1px"></div>';
         echo JCckDev::renderForm( 'core_dev_text', @$options2['field_one_id'], $config, array( 'label'=>'FIELD_ONE_ID', 'defaultvalue'=>'one_id', 'storage_field'=>'json[options2][field_one_id]', 'required'=>'required' ) );
         echo JCckDev::renderForm( 'core_dev_text', @$options2['field_one_name'], $config, array( 'label'=>'FIELD_ONE_NAME', 'defaultvalue'=>'one_name', 'storage_field'=>'json[options2][field_one_name]', 'required'=>'required' ) );
@@ -38,14 +39,15 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
         echo JCckDev::renderForm( 'core_dev_text', @$options2['field_many_id'], $config, array( 'label'=>'FIELD_MANY_ID', 'defaultvalue'=>'many_id', 'storage_field'=>'json[options2][field_many_id]', 'required'=>'required' ) );
         echo JCckDev::renderForm( 'core_dev_text', @$options2['field_many_name'], $config, array( 'label'=>'FIELD_MANY_NAME', 'defaultvalue'=>'many_name', 'storage_field'=>'json[options2][field_many_name]', 'required'=>'required' ) );
         echo '<div style="clear: left;width: 100%; height:1px"></div>';
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['separator_many_id'], $config, array( 'label'=>'SEPARATOR_FOR_MANY_ID', 'defaultvalue'=>',', 'storage_field'=>'json[options2][separator_many_id]' ) );
+        echo JCckDev::renderForm( 'core_dev_select', @$options2['invert'], $config, array( 'label'=>'INVERT', 'selectlabel'=>'', 'defaultvalue'=>'0', 'options'=>'Yes=1||No=0', 'storage_field'=>'json[options2][invert]'), array() );
+        echo JCckDev::renderBlank( '<div class="">Are you in One or Many form? Invert if in Many Form"</div>', 'Value:');
+        echo '<div style="clear: left;width: 100%; height:1px"></div>';
+        echo JCckDev::renderForm( 'core_dev_text', @$options2['separator'], $config, array( 'label'=>'SEPARATOR', 'defaultvalue'=>',', 'storage_field'=>'json[options2][separator]' ) );
         
         // ONE OPTIONS
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_ONE' ), '', '2', array( 'class_sfx'=>'-2cols' ) );
         echo JCckDev::renderForm( 'core_dev_select', @$options2['array_one'], $config, array( 'label'=>'ARRAY_ONE', 'selectlabel'=>'', 'defaultvalue'=>'fields', 'options'=>'FIELDS=fields||CONFIG=config||CCK=cck||VALUE=value', 'storage_field'=>'json[options2][array_one]'), array(), 'array one' );
         echo JCckDev::renderBlank( '<div class="fields-one">$fields[#value1#]->#value2#;</div><div class="config-one">$config[\'storages\'][#value1#][#value2#];</div><div class="cck-one">$cck->get#value1#(#value2#);</div><div class="value-one">#value1#</div>', 'Value:');
-        echo JCckDev::renderForm( 'core_dev_select', @$options2['one_id_multiple'], $config, array( 'label'=>'ONE_ID_MULTIPLE', 'selectlabel'=>'', 'defaultvalue'=>'0', 'options'=>'YES=Yes||No=0', 'storage_field'=>'json[options2][one_id_multiple]'), array(), 'one_multiple' );
-        echo JCckDev::renderForm( 'core_dev_text', @$options2['one_id_separator'], $config, array( 'label'=>'ONE_ID_SEPARATOR', 'storage_field'=>'json[options2][one_id_separator]' ), array(), 'one_separator' );
         echo '<div style="clear: left;width: 100%; height:1px"></div>';
         echo JCckDev::renderForm( 'core_dev_text', @$options2['one_id_value_1'], $config, array( 'label'=>'ONE_ID_VALUE_1', 'storage_field'=>'json[options2][one_id_value_1]' ), array(), 'one_id_value_1' );
         echo JCckDev::renderForm( 'core_dev_text', @$options2['one_id_value_2'], $config, array( 'label'=>'ONE_ID_VALUE_2', 'storage_field'=>'json[options2][one_id_value_2]' ), array(), 'one_id_value_2' );
@@ -86,19 +88,6 @@ jQuery(document).ready(function($)
         {
             $(".table, .table_pk").hide();
             $("#extended").show();
-        }
-    });
-
-    $(".one_separator").hide();
-    $('#json_options2_one_id_multiple').change(function()
-    {
-        if ( this.value == '1')
-        {
-            $(".one_separator").show();
-        }
-        else 
-        {
-            $(".one_separator").hide();
         }
     });
 

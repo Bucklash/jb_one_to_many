@@ -19,10 +19,10 @@ I might want to map this data (I think is called normalisation where a entry is 
 
 So...
 id - one_id - one_name - many_id - many_name
-1. 1 - 123 - teacher - 234 - student
-2. 2 - 123 - teacher - 345 - student
-3. 3- 123 - teacher - 456 - student
-4. 4 - 123 - teacher - 567 - student
+1. - 123 - teacher - 234 - student
+2. - 123 - teacher - 345 - student
+3. - 123 - teacher - 456 - student
+4. - 123 - teacher - 567 - student
 
 That is editing a user form the perspective of the user being in the "one" field, rather than in the "many" field.
 In other words, are you in the "one" form, or the "many" form?

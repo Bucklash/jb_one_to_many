@@ -63,7 +63,7 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
         
         // UPDATE OPTIONS
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_UPDATE' ), '', '2', array( 'class_sfx'=>'-2cols' ) );
-        echo JCckDev::renderForm( 'core_dev_select', @$options2['update_many'], $config, array( 'label'=>'UPDATE_MANY', 'selectlabel'=>'', 'defaultvalue'=>'0', 'options'=>'Yes=1||No=0', 'storage_field'=>'json[options2][update_many]'), array() );
+        echo JCckDev::renderForm( 'core_dev_select', @$options2['update_other'], $config, array( 'label'=>'UPDATE_OTHER', 'selectlabel'=>'', 'defaultvalue'=>'0', 'options'=>'Yes=1||No=0', 'storage_field'=>'json[options2][update_other]'), array() );
         echo JCckDev::renderForm( 'core_dev_select', @$options2['update_object'], $config, array( 'label'=>'UPDATE_OBJECT', 'selectlabel'=>'', 'defaultvalue'=>'Free', 'options'=>'JOOMLA=Joomla||ARTICLE=Article||CATEGORY=Category||FREE=Free||USERNOTE=UserNote||USER=User||USERGROUP=UserGroup', 'storage_field'=>'json[options2][update_object]' ), array(), 'update_object' );
         echo '<div style="clear: left;width: 100%; height:1px"></div>';
         echo JCckDev::renderForm( 'core_form', @$options2['update_content_type'], $config, array( 'label'=>'CONTENT_TYPE_FORM', 'selectlabel'=>'', 'options2'=>'{"query":"","table":"#__cck_core_types","name":"title","where":"published!=-44","value":"name","orderby":"title","orderby_direction":"ASC","limit":""}', 'required'=>'required', 'storage_field'=>'json[options2][update_content_type]' ), array(), 'update_content_type' );

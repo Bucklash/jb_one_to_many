@@ -129,29 +129,7 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 		// send = if 'never/0', override with value forfrom send_field
 		// send_field = expects same options as send i.e form field 'core_options_from_param'
 		$send  =   ( isset( $options2['send'] ) ) ? $options2['send'] : 0;
-		$send_field	=	( isset( $options2['send_field'] ) && strlen( $options2['send_field'] ) > 0 ) ? $options2['send_field'] : 0;
-		$sender	=	0;
-		switch ( $send ) 
-		{
-			case 0:
-				$sender	=	0;
-				break;
-			case 1:
-				if ( !$config['pk'] ) 
-				{
-					$sender	=	1;
-				}
-				break;
-			case 2:
-				if ( $config['pk'] ) 
-				{
-					$sender	=	1;
-				}
-				break;
-			case 3:
-				$sender	=	1;
-				break;
-		}
+		$send_field	=	( isset( $options2['send_field'] ) ) ? $options2['send_field'] : 0;
 
 		$valid = 1; // ?? when is it not valid? what am I checking?
 
@@ -196,12 +174,13 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 		parent::g_onCCK_FieldPrepareStore_Validation( $field, $name, $value, $config );
 
 		// Add Process
-		if ( ( $sender || $send_field ) && $valid )
+		if ( ( $send || $send_field ) && $valid )
 		{
 			parent::g_addProcess( $event, self::$type, $config, array(
 				'isNew' => (int) $isNew,
 				'send' => (int) $send,
 				'send_field' => $send_field,
+				'valid' => (int) $valid,
 				'event' => $event,
 				'object' => $object,
 				'content_type' => $content_type,
@@ -211,11 +190,9 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 				'field_one_name' => $field_one_name,
 				'field_many_id' => $field_many_id,
 				'field_many_name' => $field_many_name,
-				'one_id_multiple' => $one_id_multiple,
 				'invert' => (int) $invert,
 				'separator' => $separator,
 				'array_one' => $array_one,
-				'one_id_separator' => $one_id_separator,
 				'one_id_value_1' => $one_id_value_1,
 				'one_id_value_2' => $one_id_value_2,
 				'one_name' => $one_name,
@@ -226,8 +203,7 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 				'update_other' => $update_other,
 				'update_object' => $update_object,
 				'update_content_type' => $update_content_type,
-				'update_field_value_1' => $update_field_value_1,
-				'valid' => (int) $valid
+				'update_field_value_1' => $update_field_value_1
 			));
 		}
 
@@ -290,7 +266,7 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 	{
 
 		// is mapping activated by field?
-		$send = $process['send'];
+		$send = (int) $process['send'];
 		$send_field = $process['send_field'];
 
 		if ( (!$send) && $send_field ) 
@@ -321,7 +297,7 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 				break;
 		}
 
-		if (!$send) 
+		if (!$sender) 
 		{
 			return;
 		}
@@ -432,102 +408,106 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 		// 'update_field_value_1'=>
 		$update_field_value_1 = $process['update_field_value_1'];
 		// arrays used to do stuff, 'new' is from form, 'old' is from db
-		$new['many_ids'] = $invert ? explode($separator, $one_id) : explode($separator, $many_id);
-		$old['many_pks'] = array();
 		$old['many_ids'] = array();
-		$new['old_ids'] = array(); // used if multiple one_ids i.e reverse the equation
-		$old['old_pks'] = array(); // used if multiple one_ids i.e reverse the equation
-		$old['old_ids'] = array(); // used if multiple one_ids i.e reverse the equation
-
+		$old['many_pks'] = array();
 		
+		$new['many_ids'] = explode($separator, $many_id);
+		// double check that there are no crap bits on value (I kept getting ,406 as a value rather than 406)
+		foreach ($new['many_ids'] as $k => $v)
+		{
+			$new['many_ids'][$k] = trim($v, ',');
+		}
+
 		// if new data is not in old data = add
 		// if old data is not in new data = delete
 		$content = self::_jbContent($object, $table);
 		
-		// double check that there are no crap bits on value (I kept getting ,406 as a value rather than 406)
-		{
-			$new['many_ids'][$key] = trim($value, ',');
-		}
 		
 		// Get Multiple ID's from DB
 		// ... Seblod and Joomla! have different methods...
 		if ($object === 'Joomla') 
 		{
-			// TODO
-			// Get 'old' data from DB
-			// Get a db connection.
-			$db = JFactory::getDbo();
+// 			// TODO
+// 			// Get 'old' data from DB
+// 			// Get a db connection.
+// 			$db = JFactory::getDbo();
 
-			// Create a new query object.
-			$query = $db->getQuery(true);
+// 			// Create a new query object.
+// 			$query = $db->getQuery(true);
 
-			$query
-			->select(array($table_pk, $field_many_id))
-			->from($db->quoteName($table))
-			->where($db->quoteName($field_one_id) . ' = ' . (int) $one_id)
-			->where($db->quoteName($field_one_name) . ' = ' . $one_name)
-			->where($db->quoteName($field_many_name) . ' = ' . $many_name);
+// 			$query
+// 			->select(array($table_pk, $field_many_id))
+// 			->from($db->quoteName($table))
+// 			->where($db->quoteName($field_one_id) . ' = ' . (int) $one_id)
+// 			->where($db->quoteName($field_one_name) . ' = ' . $one_name)
+// 			->where($db->quoteName($field_many_name) . ' = ' . $many_name);
 
-			// Reset the query using our newly populated query object.
-			$db->setQuery($query);
+// 			// Reset the query using our newly populated query object.
+// 			$db->setQuery($query);
 
-			// Load the results as an indexed array of associated arrays from the table records returned by the query
-			$results = $db->loadAssocList();
+// 			// Load the results as an indexed array of associated arrays from the table records returned by the query
+// 			$results = $db->loadAssocList();
 
-			foreach ($results as $key => $result) 
-			{
+// 			foreach ($results as $key => $result) 
+// 			{
 
-				$old['many_ids'][$key] = trim($result[$field_many_id], ',');
-				$old['many_pks'][$key] = trim($result[$table_pk], ',');
-			}
+// 				$old['many_ids'][$key] = trim($result[$field_many_id], ',');
+// 				$old['many_pks'][$key] = trim($result[$table_pk], ',');
+// 			}
 
-			// NOW ADD OR DELETE MAP DATA
-			// DELETE
-			foreach ( $old['many_ids'] as $key => $id ) 
-			{ 
-				if ( !in_array($id, $new['many_ids']) )
-				{
-					// delete requires $pk
-					// $content->delete( $old['many_pks'][$key] );	
-					$query = $db->getQuery(true);
+// 			// NOW ADD OR DELETE MAP DATA
+// 			// DELETE
+// 			foreach ( $old['many_ids'] as $key => $id ) 
+// 			{ 
+// 				if ( !in_array($id, $new['many_ids']) )
+// 				{
+// 					// delete requires $pk
+// 					// $content->delete( $old['many_pks'][$key] );	
+// 					$query = $db->getQuery(true);
 
-					$conditions = array(
-						$db->quoteName($table_pk) . ' = ' . $old['many_pks'][$key]
-					);
+// 					$conditions = array(
+// 						$db->quoteName($table_pk) . ' = ' . $old['many_pks'][$key]
+// 					);
 
-					$query->delete($db->quoteName($table));
-					$query->where($conditions);
+// 					$query->delete($db->quoteName($table));
+// 					$query->where($conditions);
 
-					$db->setQuery($query);
+// 					$db->setQuery($query);
 
-					$result = $db->execute();
+// 					$result = $db->execute();
 					
-				}
-			}
+// 				}
+// 			}
 
-			// ADD
-			foreach ( $new['many_ids'] as $key => $id ) 
-			{ 
-				// only add if ID is 1 or above
-				if ( ( $one_id > 0 ) && ( $id > 0 ) && ( !in_array($id, $old['many_ids']) ) )
-				{ 
-					// Create and populate an object.
-					$content = new stdClass();
-					$content->$field_one_id = (int) $one_id;
-					$content->$field_one_name = $one_name;
-					$content->$field_many_id = (int) $id;
-					$content->$field_many_name = $many_name;
+// 			// ADD
+// 			foreach ( $new['many_ids'] as $key => $id ) 
+// 			{ 
+// 				// only add if ID is 1 or above
+// 				if ( ( $one_id > 0 ) && ( $id > 0 ) && ( !in_array($id, $old['many_ids']) ) )
+// 				{ 
+// 					// Create and populate an object.
+// 					$content = new stdClass();
+// 					$content->$field_one_id = (int) $one_id;
+// 					if ($one_name)
+// 					{
+// 						$content->$field_one_name = $one_name;
+// 					}
+// 					$content->$field_many_id = (int) $id;
+// 					if ($many_name)
+// 					{
+// 						$content->$field_many_name = $many_name;
+// 					}
 
-					// Insert the object into the table.
-					$result = JFactory::getDbo()->insertObject($table, $content);
-				}
-			} //--ADD
+// 					// Insert the object into the table.
+// 					$result = JFactory::getDbo()->insertObject($table, $content);
+// 				}
+// 			} //--ADD
 		} 
 		else
 		{
 			// Get 'old' data from DB
 			$data = array( 
-				$field_one_id => (int) $one_id, 
+				$field_one_id => (int) $one_id,
 				$field_one_name => $one_name,
 				$field_many_name => $many_name
 			);
@@ -551,7 +531,7 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 					$map['delete'][$key] = $id;
 				}
 			}
-	
+
 			foreach ( $new['many_ids'] as $key => $id )
 			{
 				// only add if ID is 1 or above
@@ -569,14 +549,13 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 				$deleted = $content->delete( $old['many_pks'][$key] );
 				if ( $deleted ) 
 				{ 
-					$message = 'Deleted '.$one_name.' ('.$one_id.') with '.$many_name.' ('.$id.')';
+					$message .= 'Deleted '.$one_name.' ('.$one_id.') with '.$many_name.' ('.$id.')<br>';
 					// if update
 				}
 				else
 				{
-					$message = 'Not Deleted '.$one_name.' ('.$one_id.') with '.$many_name.' ('.$id.')';
+					$message .= 'Not Deleted '.$one_name.' ('.$one_id.') with '.$many_name.' ('.$id.')<br>';
 				}
-				JFactory::getApplication()->enqueueMessage($message , 'Warning');
 			}
 
 
@@ -589,16 +568,15 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 					$field_many_id => (int) $id,
 					$field_many_name => $many_name
 				);
-
 				// Create
 				if ( $content->create( $content_type, $data )->isSuccessful() ) 
 				{ 
-					$message = 'Stored '.$one_name.' ('.$one_id.') with '.$many_name.' ('.$id.')';
+					$message .= 'Mapped '.$one_name.' ('.$one_id.') with '.$many_name.' ('.$id.')<br>';
 					JFactory::getApplication()->enqueueMessage($message , 'success');
 				}
 				else 
 				{
-					$message = 'Not Stored '.$one_name.' ('.$one_id.') with '.$many_name.' ('.$id.')';
+					$message .= 'Not Mapped '.$one_name.' ('.$one_id.') with '.$many_name.' ('.$id.')<br>';
 					JFactory::getApplication()->enqueueMessage($message , 'error');
 				}
 			} //--ADD
@@ -612,30 +590,34 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 				// UPDATE the DELETE's in Many content type
 				foreach ($map['delete'] as $key => $id) 
 				{
-					// foreach ( $updater->find( $update_content_type )->getPks() as $pk ) 
-					// {
-					if ( $updater->load( $id )->isSuccessful() ) 
+					$data = array('id' => $id);
+					foreach ( $updater->find( $update_content_type, $data )->getPks() as $pk ) 
 					{
-						// update data by deleting the many_id's
-						$updaterValue = $updater->getProperty( $update_field_value_1 );
-						$updaterValue = explode($separator, $updaterValue);
-						foreach ($updaterValue as $key => $value) 
+						if ( $updater->load( $id )->isSuccessful() ) 
 						{
-							$updatervalue[$key] = trim($value, ',');
-						}
-						$updaterValue = array_diff($updaterValue,array($one_id));
-						$updaterValue = implode($separator, $updaterValue);
-						$updated = $updater->setProperty( $update_field_value_1, $updaterValue )->store();
+							// update data by deleting the many_id's
+							$updaterValue = $updater->getProperty( $update_field_value_1 );
+							$updaterValue = explode($separator, $updaterValue);
+							foreach ($updaterValue as $key => $value) 
+							{
+								$updatervalue[$key] = trim($value, ',');
+							}
 
-						if ( $updated ) 
-						{ 
-							$message = ':'.gettype($updaterValue).", {$updaterValue} <- $updaterValue, Updated (Delete)".$one_name.' ('.$one_id.') from '.$many_name.' ('.$id.')';
-							JFactory::getApplication()->enqueueMessage($message , 'warning');
-						}
-						else 
-						{
-							$message = 'Updated (Not Deleted)'.$one_name.' ('.$one_id.') from '.$many_name.' ('.$id.')';
-							JFactory::getApplication()->enqueueMessage($message , 'warning');
+							// make sure one_id is not in delete array? why would it be there? Why did I care?
+							$updaterValue = array_diff($updaterValue,array($one_id));
+							$updaterValue = implode($separator, $updaterValue);
+							$updated = $updater->setProperty( $update_field_value_1, $updaterValue )->store();
+
+							if ( $updated ) 
+							{ 
+								$message .= 'Unmapped '.$one_name.' ('.$one_id.') with '.$many_name.' ('.$id.')<br>';
+								JFactory::getApplication()->enqueueMessage($message , 'success');
+							}
+							else 
+							{
+								$message .= 'Not Unmapped '.$one_name.' ('.$one_id.') with '.$many_name.' ('.$id.')<br>';
+								JFactory::getApplication()->enqueueMessage($message , 'error');
+							}
 						}
 					}
 				}
@@ -644,11 +626,8 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 				{
 					if ( $updater->load( $id )->isSuccessful() ) 
 					{
-						$message = 'load is successful (Add)'.$one_name.' ('.$one_id.') from '.$many_name.' ('.$id.')';
-						JFactory::getApplication()->enqueueMessage($message , 'success');
 						// update data by deleting the many_id's
 						$updaterValue = $updater->getProperty( $update_field_value_1 );
-						JFactory::getApplication()->enqueueMessage($updaterValue.' and one_id '.$one_id, 'updatedshit Add');
 						$updaterValue = explode($separator, $updaterValue);
 						foreach ($updaterValue as $key => $value) 
 						{
@@ -660,13 +639,13 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 						
 						if ( $updated ) 
 						{ 
-							$message = ':'.gettype($updaterValue).", {$updaterValue} <- $updaterValue, Updated (Delete)".$one_name.' ('.$one_id.') from '.$many_name.' ('.$id.')';
-							JFactory::getApplication()->enqueueMessage($message , 'updaterValue');
+							$message .= 'Updated (Added) '.$one_name.' ('.$one_id.') with '.$many_name.' ('.$id.')<br>';
+							JFactory::getApplication()->enqueueMessage($message , 'success');
 						}
 						else 
 						{
-							$message = 'Updated (Not Added) '.$one_name.' ('.$one_id.') from '.$many_name.' ('.$id.')';
-							JFactory::getApplication()->enqueueMessage($message , 'warning');
+							$message .= 'Not Updated (Added) '.$one_name.' ('.$one_id.') with '.$many_name.' ('.$id.')<br>';
+							JFactory::getApplication()->enqueueMessage($message , 'error');
 						}
 					}   
 				}
@@ -707,11 +686,10 @@ class plgCCK_FieldJb_One_To_Many extends JCckPluginField
 			case 'UserGroup':
 				$content = new JCckContentUserGroup;
 				# code...
-				break;
-				
+				break;				
 			default:
 				# code...
-				$content = new JCckContentFree;
+				$content = new JCckContentArticle;
 				$content->setTable( $table );
 				break;
 		}
